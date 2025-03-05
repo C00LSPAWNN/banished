@@ -976,7 +976,7 @@ local function find()
 	local check2 = true
 	task.wait(2)
 	if foundas==false then
-		create("Not found c00lspawnn's backdoor remote", "finding lalol hub's backdoor remote. ".. os.clock()- timee.."s")
+		create("Not found c00lspawnn's backdoor remote", "finding LALOL hub's backdoor remote. ".. os.clock()- timee.."s")
 		
 		local remotes={}
 

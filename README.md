@@ -1,4 +1,4 @@
-c00lspawnn is a Roblox group with ***OPEN SOURCE*** assets and with Roblox exploit scripts for testing.
+c00lspawnn is a Roblox team with ***OPEN SOURCE*** assets and with Roblox exploit scripts for testing.
 
 discord links
 

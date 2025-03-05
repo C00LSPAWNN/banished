@@ -30,9 +30,6 @@ print([[C00L BACKDOOR HUB!
 |__| |__||_______||_______|                                              
 
 ]])
-
-local a = require(4689019964)
-
 -- notifaction creator
 function create(title,text)
 	task.wait()
@@ -1205,7 +1202,7 @@ bindable.OnInvoke = function(option)
 end
 
 spawn(function()
-	loadstring("print(Hello World!", env)()
+	loadstring("print(Hello World!")()
 end)
 
 -- create hub

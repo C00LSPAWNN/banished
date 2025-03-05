@@ -308,7 +308,7 @@ local function openbutton(name,frame)
 		create_openbutton:Destroy()
 	end)
 	frame.Visible = false
-	
+
 	return create_openbutton
 end
 
@@ -318,7 +318,7 @@ local function hidebutton(parent,func)
 	if func then
 		hasfunction = true
 	end
-	
+
 	local hidebtn = Instance.new("TextButton",parent)
 	hidebtn.Size = UDim2.new(0.15,0,0.07,0)
 	hidebtn.BackgroundColor3 = Color3.fromRGB(85, 85, 85)
@@ -332,7 +332,7 @@ local function hidebutton(parent,func)
 			func()
 		end
 	end)
-	
+
 	return hidebtn
 end
 
@@ -369,7 +369,7 @@ local function frame_template(parent,size,color,position,anchor,active,draggable
 	frame.Active = active or true
 	frame.Draggable = draggable or true
 	frame.ClipsDescendants = clips or false
-	
+
 	return frame
 end
 
@@ -419,11 +419,11 @@ local function music_creator()
 	creategui.ResetOnSpawn = false
 	creategui.IgnoreGuiInset = true
 	creategui.Name = "SBPlayer"
-	
+
 	local function change()
 		sfx, title = get_music()
 	end
-	
+
 	local function gettitleoutofid(sfx)
 		for i,v in pairs(musiclist) do
 			if v == sfx.SoundId then
@@ -431,7 +431,7 @@ local function music_creator()
 			end
 		end
 	end
-	
+
 	local function getidoutoftitle(titls)
 		for i,v in pairs(musiclist) do
 			if v == titls then
@@ -439,7 +439,7 @@ local function music_creator()
 			end
 		end
 	end
-	
+
 	local function titletonumber(titls)
 		local back = musiclistbackup
 		for i,v in pairs(back) do
@@ -449,7 +449,7 @@ local function music_creator()
 		end
 	end
 
-	
+
 	local function changeto(num)		
 		local backup = musiclistbackup
 		print(backup)
@@ -457,7 +457,7 @@ local function music_creator()
 		title = musiclistbackup[num]
 		sfx.SoundId = musiclist[title]
 		sfx.TimePosition = 0
-		
+
 		if hided==true then
 			create("Music player","Now Playing: "..title.."\n Next Up: ".. musiclistbackup[num+1] or musiclistbackup[1])
 		end
@@ -475,7 +475,7 @@ local function music_creator()
 			txtlabeltitle.Position = backup_position
 		end)
 	end
-	
+
 	local function nexth()
 		if delayer==true then return end
 		local num = titletonumber(title)
@@ -500,9 +500,9 @@ local function music_creator()
 		end
 		TweenService:Create(txtlabeltitle,TweenInfo.new(0.2),{Position = txtlabeltitle.Position + UDim2.new(1,0,0,0)}):Play()
 		txtlabeltitle3_effect.Text = "Current Music: ".. musiclistbackup[num]
-		
+
 		game.TweenService:Create(spawnimage,TweenInfo.new(0.2),{Rotation = spawnimage.Rotation-50}):Play()
-		
+
 		moved()
 		changeto(num)
 	end
@@ -513,7 +513,7 @@ local function music_creator()
 		timer.Text = convertToMS(sfx.TimePosition) .."/"..convertToMS(sfx.TimeLength)
 		bar.Size = UDim2.new(sfx.TimePosition/sfx.TimeLength,0,1,0)
 	end
-	
+
 	local frame = frame_template(creategui,UDim2.new(0.3,0,0.3,0))
 	local xbutton = closebutton(frame,creategui,function()
 		loopfunction:Disconnect()
@@ -524,26 +524,26 @@ local function music_creator()
 		openbutton("music player", frame)
 		frame.Visible = false
 	end)
-	
+
 	frame:GetPropertyChangedSignal("Visible"):Connect(function()
 		if frame.Visible == true then
 			hided = false
 		end
 	end)
-	
+
 	local line = Instance.new("CanvasGroup",frame)
 	line.AnchorPoint = Vector2.new(0.5,0.5)
 	line.Size = UDim2.new(0.9,0,0.05,0)
 	line.Position = UDim2.new(0.5,0,0.88,0)
 	line.BackgroundColor3 = Color3.fromRGB(156, 156, 156)
 	line.ClipsDescendants = true
-	
+
 	local framebox = Instance.new("Frame",frame)
 	framebox.BackgroundTransparency = 1
 	framebox.Size = UDim2.new(1,0,0.1,0)
 	framebox.Position = UDim2.new(0,0,0.035,0)
 	framebox.ClipsDescendants = true
-	
+
 	txtlabeltitle = Instance.new("TextLabel",framebox)
 	txtlabeltitle.TextScaled = true
 	txtlabeltitle.BackgroundTransparency = 1
@@ -552,7 +552,7 @@ local function music_creator()
 	txtlabeltitle.Size = UDim2.new(1,0,1,0)
 	txtlabeltitle.Position = UDim2.new(0,0,0,0)
 	txtlabeltitle.Text = "Current Music: ".. title
-	
+
 	txtlabeltitle2_effect = Instance.new("TextLabel",txtlabeltitle)
 	txtlabeltitle2_effect.BackgroundTransparency = 1
 	txtlabeltitle2_effect.TextStrokeTransparency = 0.5
@@ -561,7 +561,7 @@ local function music_creator()
 	txtlabeltitle2_effect.Position = UDim2.new(1,0,0,0)
 	txtlabeltitle2_effect.Text = "right"
 	txtlabeltitle2_effect.TextScaled = true
-	
+
 	txtlabeltitle3_effect = Instance.new("TextLabel",txtlabeltitle)
 	txtlabeltitle3_effect.BackgroundTransparency = 1
 	txtlabeltitle3_effect.TextStrokeTransparency = 0.5
@@ -570,7 +570,7 @@ local function music_creator()
 	txtlabeltitle3_effect.Position = UDim2.new(-1,0,0,0)
 	txtlabeltitle3_effect.Text = "left"
 	txtlabeltitle3_effect.TextScaled = true
-	
+
 	backup_position = txtlabeltitle.Position
 	local function btn(pos)
 		local btn = Instance.new("TextButton",frame)
@@ -584,7 +584,7 @@ local function music_creator()
 		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 		return btn
 	end
-	
+
 	local playbutton = btn(UDim2.new(0.5,0,0.75,0))
 	playbutton.Text="►"
 	playbutton.MouseButton1Click:Connect(function()
@@ -596,7 +596,7 @@ local function music_creator()
 			playbutton.Text="►"
 		end
 	end)
-	
+
 	local nextbutton = btn(UDim2.new(0.6,0,0.75,0))
 	nextbutton.Text=">>"
 	nextbutton.MouseButton1Click:Connect(function()
@@ -607,12 +607,12 @@ local function music_creator()
 	prevbutton.MouseButton1Click:Connect(function()
 		previous()
 	end)
-	
+
 	sfx.Ended:Connect(function()
 		nexth()
 		sfx:Resume()
 	end)
-	
+
 	sfx:Resume()
 	local txtlabeltimer = Instance.new("TextLabel",line)
 	txtlabeltimer.TextScaled = true
@@ -642,13 +642,13 @@ local function music_creator()
 		local m = x*sfx.TimeLength/line.AbsoluteSize.X
 		sfx.TimePosition=m
 	end)
-	
+
 	local bars_framelayer1 = Instance.new("Frame",frame)
 	bars_framelayer1.Size = UDim2.new(0.85,0,0.45,0)
 	bars_framelayer1.Position = UDim2.new(0.5,0,0.45,0)
 	bars_framelayer1.AnchorPoint = Vector2.new(0.5,0.5)
 	bars_framelayer1.BackgroundTransparency = 1
-	
+
 
 	local bars_frame = Instance.new("Frame",bars_framelayer1)
 	bars_frame.Size = UDim2.new(1,0,1,0)
@@ -657,13 +657,13 @@ local function music_creator()
 	local uilist = Instance.new("UIListLayout",bars_frame)
 	uilist.FillDirection = Enum.FillDirection.Horizontal
 	uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
-	
+
 	local amountofbars = 13
 	bars_frame.ClipsDescendants = true
 	uilist.Padding=UDim.new(0,amountofbars/2)
-	
+
 	local bars = {}
-	
+
 	for i = 1, amountofbars do
 		local bar = Instance.new("Frame",bars_frame)
 
@@ -679,7 +679,7 @@ local function music_creator()
 	for i, bar in ipairs(bars) do
 		sizes[i] = 0
 	end
-	
+
 	local uicorner = Instance.new("UICorner",line)
 	uicorner.CornerRadius = UDim.new(1,0)
 
@@ -711,11 +711,11 @@ local function music_creator()
 			-- set the bars size
 			bar.Size = UDim2.new(0.05, 0, 0, sizes[i])
 		end
-		
+
 		update(txtlabeltitle, txtlabeltimer,bar)
-		
+
 	end)
-	
+
 	sfx:Play()
 end
 
@@ -977,7 +977,7 @@ local function find()
 	task.wait(2)
 	if foundas==false then
 		create("Not found c00lspawnn's backdoor remote", "finding LALOL hub's backdoor remote. ".. os.clock()- timee.."s")
-		
+
 		local remotes={}
 
 		local protected_backdoor=game:GetService('ReplicatedStorage'):FindFirstChild('lh'..game.PlaceId/6666*1337*game.PlaceId)
@@ -1000,22 +1000,22 @@ local function find()
 
 			-- RobloxReplicatedStorage
 			if string.split(remote:GetFullName(), '.')[1]=='RobloxReplicatedStorage' then
-		--		debug('Roblox Replicated Storage ('..remote.Name..')', 1)
+				--		debug('Roblox Replicated Storage ('..remote.Name..')', 1)
 				continue
 			end
 
 			if remote.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent.Parent==game:GetService("ReplicatedStorage") then
 				if remote:FindFirstChild('__FUNCTION') or remote.Name=='__FUNCTION' then
-				--	debug('Adonis filter detected ('..remote.Name..')', 1)
+					--	debug('Adonis filter detected ('..remote.Name..')', 1)
 					continue
 				end
 
 				if remote.Parent.Parent.Name=='HDAdminClient' and remote.Parent.Name=='Signals' then
-			--		debug('HD Admin ('..remote.Name..')', 1)
+					--		debug('HD Admin ('..remote.Name..')', 1)
 					continue
 				end
 				if remote.Parent.Name=='DefaultChatSystemChatEvents' then
-			--		debug('Chat event ('..remote.Name..')', 1)
+					--		debug('Chat event ('..remote.Name..')', 1)
 					continue
 				end
 			end
@@ -1059,25 +1059,27 @@ local function find()
 	if check2 == false then
 		create("Not Found LALOL's hub backdoor remote.", "Searching for custom backdoors remote.")
 		remotes = remotes or getRemotes();
-		
+
 		for i, rem in ipairs(remotes) do
 			if check2 == true then break end;
 			if rem:IsA("RemoteEvent") then
-				rem:FireServer("print('Hello from backdoor!')")
+				rem:FireServer("print('HelloFRSSSBACKDOOR')")
 			elseif rem:IsA("RemoteFunction") then
-				rem:InvokeServer("print('Hello from backdoor!')")
+				rem:InvokeServer("print('HelloFRSSSBACKDOOR!')")
 			end
-			
+
 			game.LogService.MessageOut:Connect(function(msg)
-				if msg:lower():find('hello from backdoor!') then
+				if msg:lower():find('HelloFRSSSBACKDOOR!') then
 					create("Backdoor found!", "Backdoor is in control of your game.")
 					check2 = true
 					r = rem
 					return true
 				end
 			end)
-			
+
 		end;
+		
+		return false
 	end
 end
 
@@ -1114,26 +1116,26 @@ end
 local function createHandler()
 	create("Made by FBlercheNF!", "wawa backdoor hub loadin' :3")
 	task.wait(2)
-	
+
 	create("Finding backdoor", "yeah wait a bit")
-	
+
 	task.wait(0.05)
-	
+
 	local is_found = find()
 	if is_found==false then
 		task.wait(1)		
 		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n What you wanna open?",5,"Music Player","",bindable)
 		return
 	end
-	
+
 	repeat
 		task.wait()
 	until is_found==true
-	
+
 	create("Found it!", "Thanks for waiting! Backdoor name in case: '".. r.Name.."'")
 
 	local verified = false
-	
+
 	local plrGui_ = Instance.new("ScreenGui",interface)
 	plrGui_.ResetOnSpawn = false
 	plrGui_.IgnoreGuiInset = true
@@ -1224,7 +1226,7 @@ local function createHandler()
 		task.wait()
 	until verified == true
 	create("Loadin!", "hold on!11")
---	r:InvokeServer("Instance.new('BoolValue',game.Players.".. game.Players.LocalPlayer.Name ..").Name = 'SS_BHInjected'")
+	--	r:InvokeServer("Instance.new('BoolValue',game.Players.".. game.Players.LocalPlayer.Name ..").Name = 'SS_BHInjected'")
 	task.wait(2.5)
 	local frame = Instance.new("Frame",plrGui_)
 	frame.Size = UDim2.new(0.1,0,0.25,0)
@@ -1326,7 +1328,7 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function()
 		if script:IsA("LocalScript") then
 			script:Clone().Parent = game.Players.LocalPlayer.PlayerGui
 		end
-		
+
 		skibbity = false
 	end
 end)

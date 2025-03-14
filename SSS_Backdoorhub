@@ -66,6 +66,8 @@ local musiclist = {
 }
 
 local musiclistbackup = {}
+local plr = game.Players.LocalPlayer
+local chr = plr.Character or plr.CharacterAdded:Wait()
 
 for i,v in pairs(musiclist) do table.insert(musiclistbackup,i) end
 
@@ -778,7 +780,7 @@ local function gui_create()
 	textButton.TextColor3 = Color3.fromRGB(255,255,255)
 	textButton.Position = UDim2.new(0.015,0,.7+textButton.Size.Y.Scale/2.6,0)
 	textButton.TextScaled = true
-	
+
 	local syntaxenable = Instance.new("TextButton",frame)
 	syntaxenable.Text = "Syntax: T"
 	syntaxenable.BackgroundColor3 = Color3.fromRGB(123, 47, 186)
@@ -814,7 +816,7 @@ local function gui_create()
 	clear.TextColor3 = Color3.fromRGB(255,255,255)
 	clear.Position = UDim2.new(0.63,0,.7+clear.Size.Y.Scale/2.6,0)
 	clear.TextScaled = true
-	
+
 	local resize = Instance.new("TextButton",frame)
 	resize.Text = "Resize"
 	resize.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
@@ -822,7 +824,7 @@ local function gui_create()
 	resize.TextColor3 = Color3.fromRGB(255,255,255)
 	resize.Position = UDim2.new(0.83,0,.7+clear.Size.Y.Scale/2.6,0)
 	resize.TextScaled = true
-	
+
 	clear.MouseButton1Click:Connect(function() 
 		clear.Text = "Cleared!"
 		textbox.Text = ""
@@ -1014,8 +1016,8 @@ local function find()
 		check2 = false
 	end
 
-	
-	
+
+
 	return check2
 end
 
@@ -1223,9 +1225,9 @@ local function gambler()
 	b.TextTransparency = 1
 	b.RichText = true
 	local delayer = false
-	
+
 	local bindable = Instance.new("BindableFunction")
-	
+
 	bindable.OnInvoke = function()
 		if r then
 			create("Hakari reference", "for the next eternity of this planet, "..game.Players.LocalPlayer.DisplayName.." is now immortal")
@@ -1267,7 +1269,7 @@ local function gambler()
 			create("Hakari reference", "for the next eternity of this planet, "..game.Players.LocalPlayer.DisplayName.." is now immortal")
 		end
 	end
-	
+
 	button.MouseButton1Click:Connect(function()
 		if delayer==true then return end
 		activatorbool.Value = not activatorbool.Value
@@ -1276,17 +1278,184 @@ local function gambler()
 			delayer = false
 			TweenService:Create(b,TweenInfo.new(1),{TextTransparency = 0}):Play()
 			b.Text = tostring(value1.Value).. "   ".. tostring(value2.Value).. "   ".. tostring(value3.Value)
-			
+
 			b.Text=b.Text:gsub("7",'<font color="#3CAE63">7</font>')
-			
+
 			task.delay(0.5,function()
 				TweenService:Create(b,TweenInfo.new(1),{TextTransparency = 1}):Play()
 			end)
-			
+
 			if value1.Value=="7" and value2.Value=="7" and value3.Value=="7" then
 				bindable:Invoke()
 			end
 		end)
+	end)
+end
+local record_table = {}
+
+local function gui(plr,reset_by_spawn,ignoreguinset)
+	local create = Instance.new("ScreenGui",plr.PlayerGui)
+	create.ResetOnSpawn = reset_by_spawn or false
+	create.IgnoreGuiInset = ignoreguinset or true
+
+	return create
+end
+
+local nodes_part = Instance.new("Folder",workspace)
+nodes_part.Name = "Chiikawa's Nodes"
+local function create_node(pos,name)
+	local part = Instance.new("Part")
+	part.Anchored = true
+	part.CanCollide = false
+	part.Position = pos
+	part.Transparency = 0.6
+	part.Name = name
+	part.Color = Color3.fromRGB(255, 255, 255)
+	part.Material = Enum.Material.Neon
+	part.Parent = nodes_part
+	part.Size = Vector3.new(1,1,1)
+
+	local mini_hitbox = Instance.new("Part")
+	mini_hitbox.Size = Vector3.new(0.5,0.5,0.5)
+	mini_hitbox.Position = part.Position
+	mini_hitbox.Anchored = true
+	mini_hitbox.Material = "Neon"
+	mini_hitbox.Color = Color3.fromRGB(255, 0, 4)
+	mini_hitbox.CanCollide = false
+	mini_hitbox.Parent = part
+
+	task.delay(0.5,function()
+		mini_hitbox:Destroy()
+	end)
+end
+
+function player_recorder()
+	local record = false
+	game["Run Service"].RenderStepped:Connect(function()
+		if record==false then return end
+		create_node(chr.HumanoidRootPart.CFrame.p,#record_table+1)
+		table.insert(record_table,chr.HumanoidRootPart.CFrame)
+	end)
+
+	local g = gui(plr,false)
+	local frame = frame_template(g,UDim2.new(0.25,0,0.155,0),nil,UDim2.new(0.5,0,0.85,0),nil,nil,nil,nil)
+	closebutton(frame,g,function()
+		nodes_part:Destroy()
+	end)
+
+	hidebutton(frame,function()
+		openbutton("Player Recorder",frame)
+	end)
+	local bar1 = Instance.new("Frame",frame)
+	bar1.Size = UDim2.new(1,0,0.1,0)
+	bar1.Position = UDim2.new(0,0,1,0)
+
+	local textlabela = Instance.new("TextLabel",bar1)
+	textlabela.Size = UDim2.new(1,0,1,0)
+	textlabela.Text = "0% / 100%"
+	textlabela.ZIndex = 5
+	textlabela.BackgroundTransparency = 1
+
+	local bar = Instance.new("Frame",bar1)
+	bar.Size = UDim2.new(.5,0,1,0)
+	bar.BackgroundColor3 = Color3.fromRGB(160, 255, 220)
+
+
+	local textbutton = Instance.new("TextButton",frame)
+	textbutton.Position = UDim2.new(0.15,0,0.5,0)
+	textbutton.AnchorPoint = Vector2.new(0.5,0.5)
+	textbutton.Text = "Record"
+	textbutton.Size = UDim2.new(0.3,0,0.5,0)
+
+	local looped = false
+	local Loop = Instance.new("TextButton",frame)
+	Loop.Position = UDim2.new(0.5,0,0.86,0)
+	Loop.AnchorPoint = Vector2.new(0.5,0.5)
+	Loop.Text = "Loop: X"
+	Loop.Size = UDim2.new(0.5,0,0.2,0)
+
+	local Play = Instance.new("TextButton",frame)
+	Play.Position = UDim2.new(0.5,0,0.5,0)
+	Play.AnchorPoint = Vector2.new(0.5,0.5)
+	Play.Text = "Play"
+	Play.Size = UDim2.new(0.35,0,0.5,0)
+
+	local c = Instance.new("TextButton",frame)
+	c.Position = UDim2.new(0.85,0,0.5,0)
+	c.AnchorPoint = Vector2.new(0.5,0.5)
+	c.Text = "Clear"
+	c.Size = UDim2.new(0.3,0,0.5,0)
+	local playing = false
+
+	local function move()
+		for i,v in pairs(record_table) do
+			if playing == false then break end
+			task.wait()
+			chr:WaitForChild("HumanoidRootPart").Anchored = true
+			chr:PivotTo(v+Vector3.new(0,1.4,0))
+			nodes_part:GetChildren()[i].Color = Color3.fromRGB(114, 255, 137)
+			bar.Size = UDim2.new(i/#record_table,0,1,0)
+			textlabela.Text = tostring(math.floor(i*100/#record_table)).."% / 100%"
+		end
+	end
+	Loop.BackgroundColor3 = Color3.fromRGB(255, 140, 140)
+
+	Loop.MouseButton1Click:Connect(function()
+		looped = not looped
+		if Loop.Text == "Loop: X" then
+			Loop.Text = "Loop: O"
+			Loop.BackgroundColor3 = Color3.fromRGB(160, 255, 220)
+		else
+			Loop.Text = "Loop: X"
+			Loop.BackgroundColor3 = Color3.fromRGB(255, 140, 140)
+		end
+	end)
+	Play.MouseButton1Click:Connect(function()
+		if playing==true then
+			playing = false
+			return
+		end
+		Play.Text = "Stop"
+		playing = true
+		for i,v in pairs(nodes_part:GetChildren()) do
+			v.Color = Color3.fromRGB(255,255,255)
+			game.TweenService:Create(v,TweenInfo.new(1),{Transparency = 0.85}):Play()
+		end
+
+		if looped == false then
+			move()
+		else
+			repeat
+				move()
+			until playing == false or looped == false
+		end
+		Play.Text = "Play"
+		playing = false
+		chr:WaitForChild("HumanoidRootPart").Anchored = false
+		for i,v in pairs(nodes_part:GetChildren()) do
+			v.Color = Color3.fromRGB(255,255,255)
+			game.TweenService:Create(v,TweenInfo.new(1),{Transparency = 0.6}):Play()
+		end
+	end)
+
+	chr:WaitForChild("Humanoid").Died:Connect(function()
+		nodes_part:ClearAllChildren()
+		table.clear(record_table)
+		g:Destroy()
+	end)
+
+	c.MouseButton1Click:Connect(function()
+		table.clear(record_table)
+		nodes_part:ClearAllChildren()
+	end)
+
+	textbutton.MouseButton1Click:Connect(function()
+		record = not record
+		if textbutton.Text == "Record" then
+			textbutton.Text = "Recording"
+		else
+			textbutton.Text = "Record"
+		end
 	end)
 end
 
@@ -1304,7 +1473,43 @@ local function haxxs()
 	frame.Active = true
 	frame.Draggable = true
 	frame.Name = "Skibbity"
+	
 	closebutton(frame,plrGui_)
+	hidebutton(frame,function()
+		openbutton("Haxxs",frame)
+	end)
+	local scrollingframe = Instance.new("ScrollingFrame",frame)
+	scrollingframe.Size = UDim2.new(1,0,1,0)
+	scrollingframe.BackgroundTransparency = 1
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
+	scrollingframe.ScrollBarThickness = 2
+	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+
+	local buttons = {"Player Recorder"}
+
+	for i,v in pairs(buttons) do
+		local temp = Instance.new("TextButton",scrollingframe)
+		temp.Size = UDim2.new(1,0,0.025,0)
+		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
+		temp.TextColor3 = Color3.fromRGB(255,255,255)
+		temp.TextTransparency = 0.65
+		temp.TextXAlignment = Enum.TextXAlignment.Left
+		temp.TextYAlignment = Enum.TextYAlignment.Top
+		temp.Text = v
+		temp.TextSize = 20
+		temp.TextWrapped = true
+		temp.AutomaticSize = Enum.AutomaticSize.Y
+		temp.MouseButton1Click:Connect(function()
+			if temp.Text == "Player Recorder" then
+				player_recorder()
+			end
+		end)
+	end
+
+	local uilist = 	Instance.new("UIListLayout",scrollingframe)
+	uilist.Padding = UDim.new(0,3)
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
+	
 end
 
 -- yeah bro
@@ -1325,6 +1530,9 @@ local function createclientsidehub()
 	frame.Draggable = true
 	frame.Name = "Skibbity"
 	closebutton(frame,plrGui_)
+	hidebutton(frame,function()
+		openbutton("Hub",frame)
+	end)
 	frame.ClipsDescendants=false
 
 	local imagelabel = Instance.new("ImageLabel",frame)
@@ -1373,7 +1581,7 @@ local function createclientsidehub()
 			end
 		end)
 	end
-	
+
 	local uilist = 	Instance.new("UIListLayout",scrollingframe)
 	uilist.Padding = UDim.new(0,3)
 	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
@@ -1406,7 +1614,7 @@ local function createHandler()
 		create_withoptions("No Found", "Sorry! This place is not have backdoor. Sorry! \n (CLIENT SIDE) \n wanna open hub?",5,"Ok!yes","No!!!1",bindable)
 		return
 	end
-	
+
 
 	repeat
 		task.wait()
@@ -1551,7 +1759,7 @@ local function createHandler()
 	scrollingframe.ScrollBarThickness = 2
 	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
 
-	local buttons = {"Inject","Reset","Music player", "Slots"}
+	local buttons = {"Inject","Reset","Music player", "Slots", "Haxxs"}
 
 	for i,v in pairs(buttons) do
 		local temp = Instance.new("TextButton",scrollingframe)
@@ -1573,8 +1781,10 @@ local function createHandler()
 				gui_create()
 			elseif temp.Text == "Music player" then
 				music_creator()
+			elseif temp.Text == "Slots" then
+				gambler() 
 			else
-				gambler()
+				haxxs()
 			end
 		end)
 	end

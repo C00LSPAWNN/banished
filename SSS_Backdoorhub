@@ -256,7 +256,81 @@ function run(source)
 end
 -- end of syntax
 
+local function creator_buttons(parent,list_buttons, function_buttons, IsAutomaticSized, onlyOneFunction)
+	local buttons = list_buttons
+
+	for i,v in pairs(buttons) do
+		local temp = Instance.new("TextButton",parent)
+		temp.Size = UDim2.new(1,0,0.2,0)
+		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
+		temp.TextColor3 = Color3.fromRGB(255,255,255)
+		temp.TextTransparency = 0.65
+		temp.TextXAlignment = Enum.TextXAlignment.Left
+		temp.TextYAlignment = Enum.TextYAlignment.Top
+		temp.Text = v
+		temp.TextSize = 20
+		temp.TextWrapped = true
+		if IsAutomaticSized then
+			if IsAutomaticSized==true then
+				temp.AutomaticSize = Enum.AutomaticSize.Y
+			end
+		end
+		
+		if onlyOneFunction then
+			temp.MouseButton1Click:Connect(function()
+				onlyOneFunction(temp.Text)
+			end)
+		end
+		
+		temp.MouseButton1Click:Connect(function()
+			if function_buttons then
+				local find = function_buttons[temp.Text]
+				if find then
+					find()
+				end
+			end
+		end)
+	end
+
+end
 local interface = game.Players.LocalPlayer.PlayerGui
+local function scroll_frame_template(frame)
+	local scrollingframe = Instance.new("ScrollingFrame",frame)
+	scrollingframe.Size = UDim2.new(1,0,1,0)
+	scrollingframe.BackgroundTransparency = 1
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
+	scrollingframe.ScrollBarThickness = 2
+	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+
+	local uilist = 	Instance.new("UIListLayout",scrollingframe)
+	uilist.Padding = UDim.new(0,3)
+	scrollingframe.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
+	return scrollingframe
+end
+
+local function create_template(name)
+	local plrGui_ = Instance.new("ScreenGui",interface)
+	plrGui_.ResetOnSpawn = false
+	plrGui_.IgnoreGuiInset = trueg
+	plrGui_.Name = "farting few"
+
+	local frame = Instance.new("Frame",plrGui_)
+	frame.Size = UDim2.new(0.1,0,0.25,0)
+	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
+	frame.Position = UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.Active = true
+	frame.Draggable = true
+	frame.Name = "Skibbity"
+
+	closebutton(frame,plrGui_)
+	hidebutton(frame,function()
+		openbutton(name or "Template",frame)
+	end)
+
+	return frame
+end
 local r = nil
 
 local list = Instance.new("ScreenGui",interface)
@@ -276,7 +350,7 @@ uilist.VerticalAlignment = Enum.VerticalAlignment.Center
 uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
 -- creates open button
-local function openbutton(name,frame)
+function openbutton(name,frame)
 	local create_openbutton = Instance.new("TextButton",hided)
 	create_openbutton.Size = UDim2.new(1,0,0.07,0)
 	create_openbutton.BackgroundColor3 = Color3.fromRGB(55,55,55)
@@ -309,7 +383,7 @@ local function openbutton(name,frame)
 end
 
 -- creates hide button
-local function hidebutton(parent,func)
+function hidebutton(parent,func)
 	local hasfunction = false
 	if func then
 		hasfunction = true
@@ -333,7 +407,7 @@ local function hidebutton(parent,func)
 end
 
 -- create close button
-local function closebutton(parent,closes_what, func)
+function closebutton(parent,closes_what, func)
 	closes_what = closes_what or parent
 	local hasfunction = false
 	if func then
@@ -913,6 +987,7 @@ local function find()
 	local foundas = true
 
 	for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
+		task.wait()
 		if v.Name == "." then
 			finds = v
 			break
@@ -941,6 +1016,7 @@ local function find()
 			local found = false
 			local obj = nil
 			for i,v in pairs(game.ReplicatedStorage:GetChildren()) do
+				task.wait()
 				if v.Name == "." and v:GetTags()[1] == "WAWACODE" then
 					found = true
 					obj = v
@@ -960,14 +1036,33 @@ local function find()
 		return foundas
 	end
 	local check2 = false
+	local stopchecking = false
 	task.wait(2)
-
+	
+	local callback_func = Instance.new("BindableFunction")
+	callback_func.OnInvoke=function(option)
+		if option=="Stop" then
+			stopchecking = true
+		end
+	end
 	if foundas==false then
-		create("Not found c00lspawnn's backdoor remote", "finding LALOL hub's backdoor remote. ".. os.clock()- timee.."s")
+		create_withoptions("Not found c00lspawnn's backdoor remote", "finding LALOL hub's backdoor remote. ".. os.clock()- timee.."s",5,"Continue", "Stop",callback_func)
+		task.wait(3)
+		if stopchecking==true then
+			return false
+		end
+		if stopchecking==true then return end
+		if stopchecking==true then return end		
+		if stopchecking==true then return end
+		if stopchecking==true then return end
+		if stopchecking==true then return end
+		if stopchecking==true then return end
 		local remotes={}
 		local protected_backdoor=game:GetService('ReplicatedStorage'):FindFirstChild('lh'..game.PlaceId/6666*1337*game.PlaceId)
 		if protected_backdoor and protected_backdoor:IsA('RemoteFunction') then
 			while true do
+				if stopchecking==true then return end
+				task.wait()
 				code=generateName(math.random(12,30))
 				if not remotes[code] then break end
 			end
@@ -975,6 +1070,7 @@ local function find()
 			remotes[code]=protected_backdoor
 		end
 		for i,remote in game:GetDescendants() do
+			if stopchecking==true then return end
 			if not remote:IsA('RemoteEvent') then 
 				if not remote:IsA('RemoteFunction') then continue end
 			end
@@ -995,6 +1091,7 @@ local function find()
 				end
 			end
 			while true do
+				if stopchecking==true then return end
 				code=generateName(math.random(12,30))
 				if not remotes[code] then break end
 			end
@@ -1002,7 +1099,9 @@ local function find()
 			remotes[code]=remote
 		end
 		for i=1,100 do
+			if stopchecking==true then return end
 			for i,remote in remotes do
+				if stopchecking==true then return end
 				local code=i
 				if workspace:FindFirstChild(code) then
 					r=remote
@@ -1049,6 +1148,163 @@ function typewrite(TextLabel,text, waiter)
 		task.wait(waiter)
 	end
 end
+
+local function get_gamename()
+	return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+end
+
+local current_bindednum = {}
+local current_binded = {} 
+
+local function search(name)
+	for i,v in pairs(current_binded) do
+		if v[1]==name then
+			return v
+		end
+	end
+end
+
+local function unbind_(name)
+	for i,v in pairs(current_binded) do
+		if v[1]==name then
+			table.remove(current_bindednum,i)
+			table.remove(current_binded,i)
+		end
+	end
+end
+
+local function bind_(name,keybind,func)
+	local value = true
+	table.insert(current_binded, {name,value})
+	table.insert(current_bindednum, name)
+	print(current_binded)
+	local c = nil
+	c = game.UserInputService.InputBegan:Connect(function(k,g)
+		local searchuh = search(name)
+		if searchuh then
+			if searchuh[2]==false then c:Disconnect() return end
+			if g then return end
+			if k.KeyCode==keybind then
+				func()
+			end
+		end
+	end)
+end
+local gameslist = nil
+local functions = {
+	["Goku"] = function()
+		local range = 100
+		local teleport_range = 120
+		local stopped = false
+		local disabled = false
+		local con
+		create("Info","Z to Stop, C to Disable")
+
+		local Z_Bind = bind_("ZGoku",Enum.KeyCode.Z,function()
+			stopped = not stopped
+			if stopped==true then
+				create("Info","Goku script is Disabled")
+			else
+				create("Info","Goku script is Enabled")
+			end
+		end) 
+
+		local C_Bind = bind_("CGoku",Enum.KeyCode.C,function()
+			disabled = true
+			stopped = false
+			con:Disconnect()
+			unbind_("ZGoku")
+			unbind_("CGoku")
+			create("Info","Goku is Disabled")
+		end) 
+		
+		task.spawn(function()
+			while task.wait() do
+				if disabled == true then break end
+				local player = game.Players.LocalPlayer
+				local chr = workspace.Live[player.Name] or game.Players.LocalPlayer.Character
+				local hrp = chr:WaitForChild("Torso")
+				if stopped == false then
+
+					task.spawn(function()
+						for i,v in pairs(game.Players:GetChildren()) do
+							local other_chr = v.Character
+							local other_hrp = other_chr.Torso
+							if (hrp.Position - other_hrp.Position).Magnitude <= range then
+								if v.Name == player.Name then return end
+								chr:MoveTo(other_hrp.Position - other_hrp.CFrame.LookVector * teleport_range)
+							end
+						end
+
+					end)
+					for i,v in pairs(workspace.Live:GetChildren()) do
+						local other_chr = v
+						local other_hrp = other_chr.Torso
+						if (hrp.Position - other_hrp.Position).Magnitude <= range then
+							if v.Name == player.Name then return end
+							chr:MoveTo(other_hrp.Position - other_hrp.CFrame.LookVector * teleport_range)
+						end
+					end
+				else
+					if chr.Humanoid.Health <= 35 then
+						chr:MoveTo(hrp.Position - hrp.CFrame.LookVector * teleport_range)
+					end
+				end
+			end
+		end)
+		
+		con = game["Run Service"].RenderStepped:Connect(function()
+			if disabled == true then con:Disconnect() return end
+			local player = game.Players.LocalPlayer
+			local chr = workspace.Live[player.Name] or game.Players.LocalPlayer.Character
+			local hrp = chr:WaitForChild("Torso")
+			if stopped == false then
+				
+				task.spawn(function()
+					for i,v in pairs(game.Players:GetChildren()) do
+						local other_chr = v.Character
+						local other_hrp = other_chr.Torso
+						if (hrp.Position - other_hrp.Position).Magnitude <= range then
+							if v.Name == player.Name then return end
+							chr:MoveTo(other_hrp.Position - other_hrp.CFrame.LookVector * teleport_range)
+						end
+					end
+
+				end)
+				for i,v in pairs(workspace.Live:GetChildren()) do
+					local other_chr = v
+					local other_hrp = other_chr.Torso
+					if (hrp.Position - other_hrp.Position).Magnitude <= range then
+						if v.Name == player.Name then return end
+						chr:MoveTo(other_hrp.Position - other_hrp.CFrame.LookVector * teleport_range)
+					end
+				end
+			else
+				if chr.Humanoid.Health <= 35 then
+					chr:MoveTo(hrp.Position - hrp.CFrame.LookVector * teleport_range)
+				end
+			end
+		end)
+
+	end,
+}
+gameslist = {
+	["TSB"] = function()
+			local f = create_template("TSB")
+			local s = scroll_frame_template(f)
+			local list = {
+				"Goku",
+			}
+			local functions = {
+				["Goku"] = function()
+					functions.Goku()
+				end,
+			}
+			local buttons = creator_buttons(s,list,functions,true)
+		end,
+
+}
+
 
 -- GAMBLING!
 local function gambler()
@@ -1294,7 +1550,11 @@ end
 local record_table = {}
 
 local function gui(plr,reset_by_spawn,ignoreguinset)
-	local create = Instance.new("ScreenGui",plr.PlayerGui)
+	local parent = game.CoreGui
+	if game["Run Service"]:IsStudio()==true then
+		parent = game.Players.LocalPlayer.PlayerGui
+	end
+	local create = Instance.new("ScreenGui",parent)
 	create.ResetOnSpawn = reset_by_spawn or false
 	create.IgnoreGuiInset = ignoreguinset or true
 
@@ -1392,7 +1652,7 @@ function player_recorder()
 			if playing == false then break end
 			task.wait()
 			chr:WaitForChild("HumanoidRootPart").Anchored = true
-			chr:PivotTo(v+Vector3.new(0,1.4,0))
+			chr:PivotTo(v)
 			nodes_part:GetChildren()[i].Color = Color3.fromRGB(114, 255, 137)
 			bar.Size = UDim2.new(i/#record_table,0,1,0)
 			textlabela.Text = tostring(math.floor(i*100/#record_table)).."% / 100%"
@@ -1447,10 +1707,14 @@ function player_recorder()
 	chr:WaitForChild("Humanoid").Died:Connect(function()
 		nodes_part:ClearAllChildren()
 		table.clear(record_table)
+		playing = false
+		Play.Text = "Play"
 		g:Destroy()
 	end)
 
 	c.MouseButton1Click:Connect(function()
+		playing = false
+		Play.Text = "Play"
 		table.clear(record_table)
 		nodes_part:ClearAllChildren()
 	end)
@@ -1465,83 +1729,50 @@ function player_recorder()
 	end)
 end
 
-local function haxxs()
-	local plrGui_ = Instance.new("ScreenGui",interface)
-	plrGui_.ResetOnSpawn = false
-	plrGui_.IgnoreGuiInset = true
-	plrGui_.Name = "farting few"
 
-	local frame = Instance.new("Frame",plrGui_)
-	frame.Size = UDim2.new(0.1,0,0.25,0)
-	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
-	frame.Position = UDim2.new(0.5,0,0.5,0)
-	frame.AnchorPoint = Vector2.new(0.5,0.5)
-	frame.Active = true
-	frame.Draggable = true
-	frame.Name = "Skibbity"
-	
-	closebutton(frame,plrGui_)
-	hidebutton(frame,function()
-		openbutton("Haxxs",frame)
-	end)
-	local scrollingframe = Instance.new("ScrollingFrame",frame)
-	scrollingframe.Size = UDim2.new(1,0,1,0)
-	scrollingframe.BackgroundTransparency = 1
-	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
-	scrollingframe.ScrollBarThickness = 2
-	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+local function games()
+	local f = create_template("Games Hub")
+	local s = scroll_frame_template(f)
+	local list = {
+		"TSB",
+		"Forsaken",
+		"Template"
+	}
+	local function teto(button)
+		gameslist[button]()
+	end
+	local buttons = creator_buttons(s,list,nil,true,teto)
+end
+
+local function auto_function(func)
+	return function()
+		func()
+	end
+end
+
+local function haxxs()
+
+	local f = create_template("Haxxs")
+	local s = scroll_frame_template(f)
 
 	local buttons = {"Player Recorder"}
+	local funcs = {
+		["Player Recorder"]=function ()
+			player_recorder()
+		end
+	}
+	buttons = creator_buttons(s,buttons,funcs,true)
 
-	for i,v in pairs(buttons) do
-		local temp = Instance.new("TextButton",scrollingframe)
-		temp.Size = UDim2.new(1,0,0.025,0)
-		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
-		temp.TextColor3 = Color3.fromRGB(255,255,255)
-		temp.TextTransparency = 0.65
-		temp.TextXAlignment = Enum.TextXAlignment.Left
-		temp.TextYAlignment = Enum.TextYAlignment.Top
-		temp.Text = v
-		temp.TextSize = 20
-		temp.TextWrapped = true
-		temp.AutomaticSize = Enum.AutomaticSize.Y
-		temp.MouseButton1Click:Connect(function()
-			if temp.Text == "Player Recorder" then
-				player_recorder()
-			end
-		end)
-	end
-
-	local uilist = 	Instance.new("UIListLayout",scrollingframe)
-	uilist.Padding = UDim.new(0,3)
-	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
-	
 end
 
 -- yeah bro
 local function createclientsidehub()
 	-- FARTS VERY LOUDLY SO I DONT KNOW
 
-	local plrGui_ = Instance.new("ScreenGui",interface)
-	plrGui_.ResetOnSpawn = false
-	plrGui_.IgnoreGuiInset = true
-	plrGui_.Name = "farting few"
+	local f = create_template("Hub")
+	local s = scroll_frame_template(f)
 
-	local frame = Instance.new("Frame",plrGui_)
-	frame.Size = UDim2.new(0.1,0,0.25,0)
-	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
-	frame.Position = UDim2.new(0.5,0,0.5,0)
-	frame.AnchorPoint = Vector2.new(0.5,0.5)
-	frame.Active = true
-	frame.Draggable = true
-	frame.Name = "Skibbity"
-	closebutton(frame,plrGui_)
-	hidebutton(frame,function()
-		openbutton("Hub",frame)
-	end)
-	frame.ClipsDescendants=false
-
-	local imagelabel = Instance.new("ImageLabel",frame)
+	local imagelabel = Instance.new("ImageLabel",f)
 	imagelabel.Size = UDim2.new(1,0,1,0)
 	imagelabel.BackgroundTransparency = 1
 	imagelabel.Image = "rbxassetid://74595603256262"
@@ -1555,42 +1786,22 @@ local function createclientsidehub()
 		imagelabel.Rotation += 0.15
 	end)
 
-	local buttons = {"Music player", "Slots", "Haxxs"}
-
-	local scrollingframe = Instance.new("ScrollingFrame",frame)
-	scrollingframe.Size = UDim2.new(1,0,1,0)
-	scrollingframe.BackgroundTransparency = 1
-	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
-	scrollingframe.ScrollBarThickness = 2
-	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
-
-
-	for i,v in pairs(buttons) do
-		local temp = Instance.new("TextButton",scrollingframe)
-		temp.Size = UDim2.new(1,0,0.025,0)
-		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
-		temp.TextColor3 = Color3.fromRGB(255,255,255)
-		temp.TextTransparency = 0.65
-		temp.TextXAlignment = Enum.TextXAlignment.Left
-		temp.TextYAlignment = Enum.TextYAlignment.Top
-		temp.Text = v
-		temp.TextSize = 20
-		temp.TextWrapped = true
-		temp.AutomaticSize = Enum.AutomaticSize.Y
-		temp.MouseButton1Click:Connect(function()
-			if temp.Text == "Music player" then
-				music_creator()
-			elseif temp.Text == "Slots" then
-				gambler()
-			else
-				haxxs()
-			end
-		end)
-	end
-
-	local uilist = 	Instance.new("UIListLayout",scrollingframe)
-	uilist.Padding = UDim.new(0,3)
-	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
+	local buttons = {"Music player", "Slots", "Haxxs", "Games"}
+	local funcs = {
+		["Music player"] = function()
+			music_creator()
+		end,
+		["Slots"] = function()
+			gambler()
+		end,
+		["Haxxs"] = function()
+			haxxs()
+		end,
+		["Games"] = function()
+			games()
+		end
+	}
+	buttons = creator_buttons(s,buttons,funcs,true)
 end
 
 local bindable = Instance.new("BindableFunction")
@@ -1725,14 +1936,7 @@ local function createHandler()
 	create("Loadin!", "hold on!11")
 	--	r:InvokeServer("Instance.new('BoolValue',game.Players.".. game.Players.LocalPlayer.Name ..").Name = 'SS_BHInjected'")
 	task.wait(2.5)
-	local frame = Instance.new("Frame",plrGui_)
-	frame.Size = UDim2.new(0.1,0,0.25,0)
-	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
-	frame.Position = UDim2.new(0.5,0,0.5,0)
-	frame.AnchorPoint = Vector2.new(0.5,0.5)
-	frame.Active = true
-	frame.Draggable = true
-	frame.Name = "Skibbity"
+	local frame = create_template("Backdoor Hub")
 
 	frame.ClipsDescendants=false
 
@@ -1750,62 +1954,38 @@ local function createHandler()
 		imagelabel.Rotation += 0.15
 	end)
 
-	hidebutton(frame,function()
-		openbutton("Backdoor Hub",frame)
-	end)
 
-	closebutton(frame,plrGui_,function()
-		create("Closin hub", "wawa hub will wait for you!")
-	end)
-
-	local scrollingframe = Instance.new("ScrollingFrame",frame)
-	scrollingframe.Size = UDim2.new(1,0,1,0)
-	scrollingframe.BackgroundTransparency = 1
-	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
-	scrollingframe.ScrollBarThickness = 2
-	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
-
-	local buttons = {"Inject","Reset","Music player", "Slots", "Haxxs"}
-
-	for i,v in pairs(buttons) do
-		local temp = Instance.new("TextButton",scrollingframe)
-		temp.Size = UDim2.new(1,0,0.025,0)
-		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
-		temp.TextColor3 = Color3.fromRGB(255,255,255)
-		temp.TextTransparency = 0.65
-		temp.TextXAlignment = Enum.TextXAlignment.Left
-		temp.TextYAlignment = Enum.TextYAlignment.Top
-		temp.Text = v
-		temp.TextSize = 20
-		temp.TextWrapped = true
-		temp.AutomaticSize = Enum.AutomaticSize.Y
-		temp.MouseButton1Click:Connect(function()
-			if temp.Text == "Reset" then
-				remove()
-				runRemote(r,"game.Players."..game.Players.LocalPlayer.Name..":LoadCharacter()")		
-			elseif temp.Text == "Inject" then
-				gui_create()
-			elseif temp.Text == "Music player" then
-				music_creator()
-			elseif temp.Text == "Slots" then
-				gambler() 
-			else
-				haxxs()
-			end
-		end)
-	end
-
-	local uilist = 	Instance.new("UIListLayout",scrollingframe)
-	uilist.Padding = UDim.new(0,3)
-	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
-
+	local scrollingframe = scroll_frame_template(frame)
+	local buttons = {"Inject","Reset","Music player", "Slots", "Haxxs", "Games"}
+	
+	local funcs = {
+		["Reset"]=function()
+			remove()
+			runRemote(r,"game.Players."..game.Players.LocalPlayer.Name..":LoadCharacter()")	
+		end,
+		["Inject"]=function()
+			gui_create()
+		end,
+		["Music player"]=function()
+			music_creator()
+		end,
+		["Slots"]=function()
+			gambler()
+		end,
+		["Haxxs"]=function()
+			haxxs()
+		end,
+		["Games"]=function()
+			games()
+		end,
+		
+	}
+	
+	creator_buttons(scrollingframe,buttons,funcs,true)
 end
 
 createHandler()
 
-if script:IsA("LocalScript") then
-	script.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild("SSBHLLOADER").Skibbity
-end
 
 function remove()
 	create("Sorry!", "Im have to delete everything due 'some bug' D:")

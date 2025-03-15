@@ -1302,7 +1302,9 @@ gameslist = {
 			}
 			local buttons = creator_buttons(s,list,functions,true)
 		end,
-
+	["Template"] = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+	end,
 }
 
 

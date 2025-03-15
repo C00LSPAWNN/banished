@@ -1417,10 +1417,13 @@ function player_recorder()
 		end
 		Play.Text = "Stop"
 		playing = true
-		for i,v in pairs(nodes_part:GetChildren()) do
-			v.Color = Color3.fromRGB(255,255,255)
-			game.TweenService:Create(v,TweenInfo.new(1),{Transparency = 0.85}):Play()
-		end
+		task.spawn(function()
+			for i,v in pairs(nodes_part:GetChildren()) do
+				task.wait()
+				v.Color = Color3.fromRGB(255,255,255)
+				game.TweenService:Create(v,TweenInfo.new(1),{Transparency = 0.85}):Play()
+			end
+		end)
 
 		if looped == false then
 			move()
@@ -1432,10 +1435,13 @@ function player_recorder()
 		Play.Text = "Play"
 		playing = false
 		chr:WaitForChild("HumanoidRootPart").Anchored = false
-		for i,v in pairs(nodes_part:GetChildren()) do
-			v.Color = Color3.fromRGB(255,255,255)
-			game.TweenService:Create(v,TweenInfo.new(1),{Transparency = 0.6}):Play()
-		end
+		task.spawn(function()
+			for i,v in pairs(nodes_part:GetChildren()) do
+				task.wait()
+				v.Color = Color3.fromRGB(255,255,255)
+				game.TweenService:Create(v,TweenInfo.new(1),{Transparency = 0.6}):Play()
+			end
+		end)
 	end)
 
 	chr:WaitForChild("Humanoid").Died:Connect(function()

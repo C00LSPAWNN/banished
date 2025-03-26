@@ -1,3 +1,5 @@
+local module = {}
+module.__index = module
 local list_ = {
   ["LMB"] = 0x01,
   ["RMB"] = 0x02,
@@ -152,5 +154,5 @@ local list_ = {
   ["MEDIA_STOP"] = 0xB2,
   ["MEDIA_PLAY_PAUSE"] = 0xB3,
 }
-
-return list_
+module=list_
+return module

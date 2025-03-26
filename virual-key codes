@@ -152,3 +152,5 @@ local list_ = {
   ["MEDIA_STOP"] = 0xB2,
   ["MEDIA_PLAY_PAUSE"] = 0xB3,
 }
+
+return list_

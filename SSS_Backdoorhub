@@ -312,7 +312,7 @@ end
 local function create_template(name)
 	local plrGui_ = Instance.new("ScreenGui",interface)
 	plrGui_.ResetOnSpawn = false
-	plrGui_.IgnoreGuiInset = trueg
+	plrGui_.IgnoreGuiInset = true
 	plrGui_.Name = "farting few"
 
 	local frame = Instance.new("Frame",plrGui_)

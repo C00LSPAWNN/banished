@@ -155,4 +155,4 @@ local list_ = {
   ["MEDIA_PLAY_PAUSE"] = 0xB3,
 }
 module=list_
-return module\
+return module

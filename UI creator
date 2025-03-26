@@ -1,0 +1,252 @@
+local plr = game.Players.LocalPlayer
+local chr = plr.Character or plr.CharacterAdded:Wait()
+local interface = game.Players.LocalPlayer.PlayerGui
+
+local function notif(title, text, where)
+	local notifactionUI = Instance.new("ScreenGui",interface)
+	where = where or "Right"	
+	local framePOS = UDim2.new(0.9, 0, 1, 20) 
+	local framePOSTO = UDim2.new(0.9, 0,0.94, 0)
+	if where=="Left" then
+		framePOS = UDim2.new(0.1, 0, 1, 20) 
+		framePOSTO = UDim2.new(0.1, 0,0.94, 0)
+	elseif where=="Center" then
+		framePOS = UDim2.new(0.5, 0, 1, 20)
+		framePOSTO = UDim2.new(0.5, 0,0.94, 0)
+	end
+	local frameSIZE = UDim2.new(0, 250, 0, 100)
+	local frame = Instance.new("Frame",notifactionUI)
+	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.Position = framePOS
+	frame.Size = frameSIZE
+	frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	frame.BackgroundTransparency = 0.5
+	game.TweenService:Create(frame,TweenInfo.new(1),{Position = framePOSTO}):Play()
+	local titleOBJ = Instance.new("TextButton",frame)
+	titleOBJ.Text = title or "Hello Title!"
+	titleOBJ.RichText = true
+
+	titleOBJ.Text = titleOBJ.Text.. " <font transparency='0.25'><font size='5'>(click to close)</font></font>"
+	titleOBJ.Size = UDim2.new(1,0,0.2,0)
+	titleOBJ.TextColor3 = Color3.fromRGB(255,255,255)
+	titleOBJ.TextXAlignment = Enum.TextXAlignment.Left
+	titleOBJ.TextYAlignment = Enum.TextYAlignment.Center
+	titleOBJ.TextScaled = true
+	titleOBJ.BackgroundTransparency = 1
+	local uistroke = Instance.new("UIStroke",titleOBJ)
+	uistroke.Color = Color3.fromRGB(255,255,255)
+	uistroke.Thickness = 1
+	uistroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	local textOBJ = Instance.new("TextButton",frame)
+	textOBJ.Text = text or "Hello Description!"
+	textOBJ.Size = UDim2.new(1,0,0.8,0)
+	textOBJ.Position = UDim2.new(0,0,0.2,0)
+	textOBJ.TextColor3 = Color3.fromRGB(255,255,255)
+	textOBJ.TextXAlignment = Enum.TextXAlignment.Left
+	textOBJ.TextYAlignment = Enum.TextYAlignment.Top
+	textOBJ.TextScaled = true
+	textOBJ.BackgroundTransparency = 1
+	local uistroke = Instance.new("UIStroke",textOBJ)
+	uistroke.Color = Color3.fromRGB(255,255,255)
+	uistroke.Thickness = 1
+	uistroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	titleOBJ.MouseButton1Click:Connect(function()
+		frame:Destroy()
+	end)
+	textOBJ.MouseButton1Click:Connect(function()
+		frame:Destroy()
+	end)
+	task.delay(5,function()
+		game.TweenService:Create(textOBJ,TweenInfo.new(5),{TextTransparency = 1, BackgroundTransparency = 1}):Play()
+		game.TweenService:Create(titleOBJ,TweenInfo.new(5),{TextTransparency = 1, BackgroundTransparency = 1}):Play()
+		game.TweenService:Create(frame,TweenInfo.new(5),{BackgroundTransparency = 1}):Play()
+		game.Debris:AddItem(notifactionUI,5)
+	end)
+end
+
+local list = Instance.new("ScreenGui",interface)
+list.ResetOnSpawn = false
+list.IgnoreGuiInset = true
+list.Name = "HidedHub"
+local hided = Instance.new("Frame",list)
+hided.BackgroundTransparency = 1
+hided.Size = UDim2.new(0.052,0,1,0)
+hided.BackgroundColor3 = Color3.fromRGB(55,55,55)
+hided.AnchorPoint = Vector2.new(0.5,0.5)
+hided.Position = UDim2.new(0.95,0,0.5,0)
+
+local uilist = Instance.new("UIListLayout",hided)
+uilist.Padding = UDim.new(0,5)
+uilist.VerticalAlignment = Enum.VerticalAlignment.Center
+uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local function buttons(parent,list_buttons, function_buttons, IsAutomaticSized, onlyOneFunction)
+	local buttons = list_buttons
+
+	for i,v in pairs(buttons) do
+		local temp = Instance.new("TextButton",parent)
+		temp.Size = UDim2.new(1,0,0.2,0)
+		temp.BackgroundColor3 = Color3.fromRGB(55,55,55)
+		temp.TextColor3 = Color3.fromRGB(255,255,255)
+		temp.TextTransparency = 0.65
+		temp.TextXAlignment = Enum.TextXAlignment.Left
+		temp.TextYAlignment = Enum.TextYAlignment.Top
+		temp.Text = v
+		temp.TextSize = 20
+		temp.TextWrapped = true
+		if IsAutomaticSized then
+			if IsAutomaticSized==true then
+				temp.AutomaticSize = Enum.AutomaticSize.Y
+			end
+		end
+
+		if onlyOneFunction then
+			temp.MouseButton1Click:Connect(function()
+				onlyOneFunction(temp.Text)
+			end)
+		end
+
+		temp.MouseButton1Click:Connect(function()
+			if function_buttons then
+				local find = function_buttons[temp.Text]
+				if find then
+					find()
+				end
+			end
+		end)
+	end
+
+end
+
+local function scrollframe(frame)
+	local scrollingframe = Instance.new("ScrollingFrame",frame)
+	scrollingframe.Size = UDim2.new(1,0,1,0)
+	scrollingframe.BackgroundTransparency = 1
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
+	scrollingframe.ScrollBarThickness = 2
+	scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+
+	local uilist = 	Instance.new("UIListLayout",scrollingframe)
+	uilist.Padding = UDim.new(0,3)
+	scrollingframe.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	scrollingframe.CanvasSize = UDim2.new(0,0,0,scrollingframe.UIListLayout.AbsoluteContentSize.Y)
+	return scrollingframe
+end
+
+function openbutton(name,frame)
+	local create_openbutton = Instance.new("TextButton",hided)
+	create_openbutton.Size = UDim2.new(1,0,0.07,0)
+	create_openbutton.BackgroundColor3 = Color3.fromRGB(55,55,55)
+	create_openbutton.TextColor3 = Color3.fromRGB(255,255,255)
+	create_openbutton.TextTransparency = 0.65
+	create_openbutton.TextXAlignment = Enum.TextXAlignment.Center
+	create_openbutton.Text = "Open ".. name
+	create_openbutton.Name = name
+	create_openbutton.AnchorPoint = Vector2.new(0.5,0.5)
+	create_openbutton.Position = UDim2.new(0.95,0,0.5,0)
+	create_openbutton.TextScaled = true
+
+	local imagelabel = Instance.new("ImageLabel",create_openbutton)
+	imagelabel.Size = UDim2.new(1,0,1,0)
+	imagelabel.BackgroundTransparency = 1
+	imagelabel.Image = "rbxassetid://74595603256262"
+	imagelabel.ImageColor3 = Color3.fromRGB(255,255,255)
+	imagelabel.AnchorPoint = Vector2.new(0.5,0.5)
+	imagelabel.Position = UDim2.new(0.5,0,0.5,0)
+	imagelabel.ScaleType = Enum.ScaleType.Fit
+	imagelabel.ImageTransparency = 0.9
+
+	create_openbutton.MouseButton1Click:Connect(function()
+		frame.Visible = true
+		create_openbutton:Destroy()
+	end)
+	frame.Visible = false
+
+	return create_openbutton
+end
+
+-- creates hide button
+function hidebutton(parent,func)
+	local hasfunction = false
+	if func then
+		hasfunction = true
+	end
+
+	local hidebtn = Instance.new("TextButton",parent)
+	hidebtn.Size = UDim2.new(0.15,0,0.07,0)
+	hidebtn.BackgroundColor3 = Color3.fromRGB(85, 85, 85)
+	hidebtn.TextColor3 = Color3.fromRGB(255,255,255)
+	hidebtn.TextScaled = true
+	hidebtn.Text = "-"
+	hidebtn.Position = UDim2.new(0.83,0,-0.07,0)
+	hidebtn.AnchorPoint = Vector2.new(0.5,0.5)
+	hidebtn.MouseButton1Click:Connect(function()
+		if hasfunction==true then
+			func()
+		end
+	end)
+
+	return hidebtn
+end
+
+-- create close button
+function closebutton(parent,closes_what, func)
+	closes_what = closes_what or parent
+	local hasfunction = false
+	if func then
+		hasfunction = true
+	end
+	local closebtn = Instance.new("TextButton",parent)
+	closebtn.Size = UDim2.new(0.15,0,0.07,0)
+	closebtn.BackgroundColor3 = Color3.fromRGB(140, 63, 64)
+	closebtn.TextColor3 = Color3.fromRGB(255,255,255)
+	closebtn.TextScaled = true
+	closebtn.Text = "X"
+	closebtn.Position = UDim2.new(1,0,-0.07,0)
+	closebtn.AnchorPoint = Vector2.new(0.5,0.5)
+	closebtn.MouseButton1Click:Connect(function()
+		if hasfunction==true then
+			func()
+		end
+		closes_what:Destroy()
+	end)
+end
+
+local function template(name)
+	local plrGui_ = Instance.new("ScreenGui",interface)
+	plrGui_.ResetOnSpawn = false
+	plrGui_.IgnoreGuiInset = true
+	plrGui_.Name = "farting few"
+
+	local frame = Instance.new("Frame",plrGui_)
+	frame.Size = UDim2.new(0.1,0,0.25,0)
+	frame.BackgroundColor3 = Color3.fromRGB(45,45,45)
+	frame.Position = UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = Vector2.new(0.5,0.5)
+	frame.Active = true
+	frame.Draggable = true
+	frame.Name = "Skibbity"
+
+	closebutton(frame,plrGui_)
+	hidebutton(frame,function()
+		openbutton(name or "Template",frame)
+	end)
+
+	return frame
+end
+
+local function frametemplate(parent,size,color,position,anchor,active,draggable,clips)
+	if parent == nil then
+		parent = Instance.new("ScreenGui",interface)
+	end
+	local frame = Instance.new("Frame",parent)
+	frame.Size = size or UDim2.new(0.25,0,0.25,0)
+	frame.BackgroundColor3 = color or Color3.fromRGB(45,45,45)
+	frame.Position = position or UDim2.new(0.5,0,0.5,0)
+	frame.AnchorPoint = anchor or Vector2.new(0.5,0.5)
+	frame.Active = active or true
+	frame.Draggable = draggable or true
+	frame.ClipsDescendants = clips or false
+
+	return frame
+end

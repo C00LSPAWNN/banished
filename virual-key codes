@@ -13,7 +13,7 @@ local list_ = {
   ["RESERVED"] = 0x07,
   ["CLEAR"] = 0x0C,
   ["RETURN"] = 0x0D,
-  ["Unassigned"] = 0x0E-0F,
+
   ["SHIFT"] = 0x10,
   ["CTRL"] = 0x11,
   ["ALT"] = 0x12,
@@ -52,7 +52,7 @@ local list_ = {
   ["INSERT"] = 0x2D,
   ["DELETE"] = 0x2E,
   ["HELP"] = 0x2F,
-  ["Undefined"] = 0x3A-40
+
   ["0"] = 0x30,
   ["1"] = 0x31,
   ["2"] = 0x32,

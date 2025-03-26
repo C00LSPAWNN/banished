@@ -250,3 +250,5 @@ local function frametemplate(parent,size,color,position,anchor,active,draggable,
 
 	return frame
 end
+
+return {frametemplate, notif}

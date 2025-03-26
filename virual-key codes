@@ -88,6 +88,7 @@ local list_ = {
   [`X`]=0x58,
   [`Y`]=0x59,
   [`Z`]=0x5A,
+
   ["LWIN"] = 0x5B,
   ["RWIN"] = 0x5C,
   ["APPS"] = 0x5D,
@@ -98,6 +99,7 @@ local list_ = {
   ["SUBTRACT"] = 0x6D,
   ["DECIMAL"] = 0x6E,
   ["DIVIDE"] = 0x6F,
+
   [`F1`]=0x70,
   [`F2`]=0x71,
   [`F3`]=0x72,

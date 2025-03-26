@@ -1,8 +1,19 @@
+module = {}
+
 local plr = game.Players.LocalPlayer
 local chr = plr.Character or plr.CharacterAdded:Wait()
 local interface = game.Players.LocalPlayer.PlayerGui
+local function notif(title,text)
+	task.wait()
+	game:GetService("StarterGui"):SetCore("SendNotification",{
+		Title = title or "", -- Required
+		Text = text or "", -- Required
+		Icon = "" -- Optional
+	})
+end
+module.__index = module
 
-local function notif(title, text, where)
+function module:custom_notifcation(title, text, where)
 	local notifactionUI = Instance.new("ScreenGui",interface)
 	where = where or "Right"	
 	local framePOS = UDim2.new(0.9, 0, 1, 20) 
@@ -80,7 +91,7 @@ uilist.Padding = UDim.new(0,5)
 uilist.VerticalAlignment = Enum.VerticalAlignment.Center
 uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-local function buttons(parent,list_buttons, function_buttons, IsAutomaticSized, onlyOneFunction)
+function module:buttons(parent,list_buttons, function_buttons, IsAutomaticSized, onlyOneFunction)
 	local buttons = list_buttons
 
 	for i,v in pairs(buttons) do
@@ -118,7 +129,7 @@ local function buttons(parent,list_buttons, function_buttons, IsAutomaticSized, 
 
 end
 
-local function scrollframe(frame)
+function module:scrollframe(frame)
 	local scrollingframe = Instance.new("ScrollingFrame",frame)
 	scrollingframe.Size = UDim2.new(1,0,1,0)
 	scrollingframe.BackgroundTransparency = 1
@@ -133,7 +144,7 @@ local function scrollframe(frame)
 	return scrollingframe
 end
 
-function openbutton(name,frame)
+function module:openbutton(name,frame)
 	local create_openbutton = Instance.new("TextButton",hided)
 	create_openbutton.Size = UDim2.new(1,0,0.07,0)
 	create_openbutton.BackgroundColor3 = Color3.fromRGB(55,55,55)
@@ -166,7 +177,7 @@ function openbutton(name,frame)
 end
 
 -- creates hide button
-function hidebutton(parent,func)
+function module:hidebutton(parent,func)
 	local hasfunction = false
 	if func then
 		hasfunction = true
@@ -190,7 +201,7 @@ function hidebutton(parent,func)
 end
 
 -- create close button
-function closebutton(parent,closes_what, func)
+function module:closebutton(parent,closes_what, func)
 	closes_what = closes_what or parent
 	local hasfunction = false
 	if func then
@@ -212,7 +223,7 @@ function closebutton(parent,closes_what, func)
 	end)
 end
 
-local function template(name)
+function module:template(name)
 	local plrGui_ = Instance.new("ScreenGui",interface)
 	plrGui_.ResetOnSpawn = false
 	plrGui_.IgnoreGuiInset = true
@@ -227,15 +238,15 @@ local function template(name)
 	frame.Draggable = true
 	frame.Name = "Skibbity"
 
-	closebutton(frame,plrGui_)
-	hidebutton(frame,function()
-		openbutton(name or "Template",frame)
+	module:closebutton(frame,plrGui_)
+	module:hidebutton(frame,function()
+		module:openbutton(name or "Template",frame)
 	end)
 
 	return frame
 end
 
-local function frametemplate(parent,size,color,position,anchor,active,draggable,clips)
+function module:frametemplate(parent,size,color,position,anchor,active,draggable,clips)
 	if parent == nil then
 		parent = Instance.new("ScreenGui",interface)
 	end
@@ -251,4 +262,4 @@ local function frametemplate(parent,size,color,position,anchor,active,draggable,
 	return frame
 end
 
-return {frametemplate, notif}
+return module

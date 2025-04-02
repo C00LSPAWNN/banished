@@ -1,4 +1,4 @@
-c00lspawnn is a Roblox team with ***OPEN SOURCE*** assets / exploiting scripts which **most** of them are ***KEYLESS***
+c00lspawnn is a Roblox team with ***OPEN SOURCE*** assets / exploiting scripts
 
 discord links
 

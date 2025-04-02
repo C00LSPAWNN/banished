@@ -1,0 +1,1076 @@
+
+--[[ 
+
+DOCUMENTATION ABOUT HOW TO USE:
+
+-- -- -- HOW TO MAKE LIST FOLDER:
+
+local new = require(path to module):New()
+local Start = new:PreCreated()
+local list = {
+	"Hello",
+}
+precreation.AddButtons(list)
+local folder = precreation.CreateFolder()
+
+-- CREATES PAGE
+local page1 = folda.AddPage("Hello")
+
+-- -- -- HOW TO ADD BUTTONS
+
+local button1 = YOURPAGE.NewButton({
+	DropdownValue = {
+		"Test1",
+		"Test2",
+		"Test3",
+		"Test4",
+		"Test5",
+		"Test6"
+	},
+	["ChangedFunction"] = function(changedTo)
+		print(changedTo)
+	end,
+	Dropdown = true
+})
+
+-- -- -- HOW TO ADD SECTIONS / SEPERATORS
+
+-- SECTION:
+
+local section = YOURPAGE.Section(string)
+
+-- SEPERATOR:
+
+local seperator = YOURPAGE.AddSeperator()
+
+-- -- -- HOW TO GET BUTTON INFORMATION
+
+local button1INFO = button1:GetInformation()
+
+-- -- INFO [1]
+LIST OF BUTTONS:
+
+Information
+Dropdown
+Toggler
+Slider
+StringInput
+Button
+Keybind
+
+-- -- INFO [1] END
+
+-- -- INFO [2]
+ADDITIONS TO BUTTONS:
+	
+	TurnedOnFunction - function
+	TurnedOffFunction - function
+	ChangedFunction - function
+	
+	BindedKey - Enum.KeyCode
+	
+	CustomButtontext - String
+	InputedString - String
+	InformationText - String
+	
+	Toggled - Boolean
+	
+	-- -- -- -- -- -- -- TABLE [1]
+
+	DropDownValue - Table with strings
+		SHOWCASE: 
+		
+	DropDownValue = {
+		"Test1",
+		"Test2",
+		"Test3"
+	}
+	
+	-- -- -- -- -- -- -- TABLE [2]
+	
+	SliderValue - Table with numbers
+		SHOWCASE:
+	
+	SliderValue = {
+		Current = 0,
+		Min = 0,
+		Max = 1
+	}
+	
+	
+-- -- INFO [2] END
+
+-- -- -- HOW TO CUSTOMIZE UI
+
+-- -- INFORMATION: USE CUSTOMIZATION FUNCTION **BEFORE** CREATING A FOLDER
+
+-- TEMPLATE SCRIPT:
+local new = require(path to module):New()
+local Start = new:PreCreated()
+
+Start:SetCustoms({
+	["ToggleOn"] = Color3.fromRGB(0,0,0),
+	["ToggleOff"] = Color3.fromRGB(0,0,0),
+	["ButtonBackground"] = Color3.fromRGB(0,0,0),
+	["SeperatorColor"] = Color3.fromRGB(0,0,0),
+	["ButtonTextColor"] = Color3.fromRGB(0,0,0),
+	["SectionTextColor"] = Color3.fromRGB(0,0,0),
+	["Background"] = Color3.fromRGB(0,0,0),
+	["TitleColorBc"] = Color3.fromRGB(0,0,0),
+	["TitleColorTxt"] = Color3.fromRGB(0,0,0),
+	["ButtonNotSelectedBc"] = Color3.fromRGB(0,0,0),
+	["ButtonNotSelectedTxt"] = Color3.fromRGB(0,0,0),
+	["ButtonSelectedBc"] = Color3.fromRGB(0,0,0),
+	["ButtonSelectedTxt"] = Color3.fromRGB(0,0,0),
+	
+	["Images"] = {
+		["Close"] = "",
+		["Minimize"] = "",
+	},
+	["Keybinds"] = {
+		["Open"] = Enum.KeyCode.F2,
+	},
+	
+	["MainFont"] = Enum.Font.Arial,
+})
+
+]]--
+
+module = {}
+local plr = game.Players.LocalPlayer
+local chr = plr.Character or plr.CharacterAdded:Wait()
+local interface = game.Players.LocalPlayer.PlayerGui
+local tween = game:GetService("TweenService")
+module.__index = module
+function module:New()
+	local newers
+	newers = {}
+	
+	function newers.CreateGui(name, parent)
+		local new = Instance.new("ScreenGui")
+		new.Name = name or "Template #".. math.random(1, 1000000000)
+		new.Parent = parent or interface
+		new.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
+		new.SafeAreaCompatibility=Enum.SafeAreaCompatibility.FullscreenExtension
+		new.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
+		new.ClipToDeviceSafeArea = true
+		return new
+	end
+	
+	function newers.SubtractColor(color1:Color3,color2:Color3)
+		local color1R,color1G,color1B = color1.R, color1.G, color1.B
+		local color2R,color2G,color2B = color2.R, color2.G, color2.B
+		local newR,newG,newB = (color1R-color2R),(color1G-color2G),(color1B-color2B)
+		return Color3.new(newR,newG,newB)
+	end	
+
+	function newers.AddColor(color1:Color3,color2:Color3)
+		local color1R,color1G,color1B = color1.R, color1.G, color1.B
+		local color2R,color2G,color2B = color2.R, color2.G, color2.B
+		local newR,newG,newB = (color1R+color2R),(color1G+color2G),(color1B+color2B)
+		return Color3.new(newR,newG,newB)
+	end
+
+	function newers:PreCreated()
+		local info = {}
+		info = {}
+		
+		local information = {
+			Size = UDim2.new(0.3,0,0.5,0),
+			ToggleOn = Color3.fromRGB(92, 126, 86),
+			ToggleOff = Color3.fromRGB(126, 63, 70),
+			
+			ButtonBackground = Color3.fromRGB(50,50,50),
+			SeperatorColor = Color3.fromRGB(255,255,255),
+			
+			ButtonTextColor = Color3.fromRGB(255,255,255),
+			SectionTextColor = Color3.fromRGB(255,255,255),
+			
+			Background = Color3.fromRGB(33, 33, 33),
+			
+			TitleColorBc = Color3.fromRGB(60,60,60),
+			TitleColorTxt = Color3.fromRGB(255,255,255),
+			
+			ButtonNotSelectedBc = Color3.fromRGB(60,60,60),
+			ButtonNotSelectedTxt = Color3.fromRGB(255,255,255),
+			
+			ButtonSelectedBc = Color3.fromRGB(255,255,255),
+			ButtonSelectedTxt = Color3.fromRGB(60,60,60),
+			
+			Images = {
+				Close = "rbxassetid://9545003266",
+				Minimize = "rbxassetid://6026568240",
+			},
+			
+			Keybinds = {
+				Open = Enum.KeyCode.F2,
+			},
+			
+			MainFont = Enum.Font.Arial
+		}
+		
+
+		
+		-- Set Custom Colors / etc
+		function info:SetCustoms(list)
+			--[[
+				list = {
+					["Size"] = UDim2.new(0.5,0,0.5,0),
+					["ToggleOn"] = Color3.fromRGB(0,0,0),
+					["ToggleOff"] = Color3.fromRGB(0,0,0),
+					["ButtonBackground"] = Color3.fromRGB(0,0,0),
+					["SeperatorColor"] = Color3.fromRGB(0,0,0),
+					["ButtonTextColor"] = Color3.fromRGB(0,0,0),
+					["SectionTextColor"] = Color3.fromRGB(0,0,0),
+					["Background"] = Color3.fromRGB(0,0,0),
+					["TitleColorBc"] = Color3.fromRGB(0,0,0),
+					["TitleColorTxt"] = Color3.fromRGB(0,0,0),
+					["ButtonNotSelectedBc"] = Color3.fromRGB(0,0,0),
+					["ButtonNotSelectedTxt"] = Color3.fromRGB(0,0,0),
+					["ButtonSelectedBc"] = Color3.fromRGB(0,0,0),
+					["ButtonSelectedTxt"] = Color3.fromRGB(0,0,0),
+					["Images"] = {
+						["Close"] = "",
+						["Minimize"] = "",
+					},
+					["Keybinds"] = {
+						["Open"] = Enum.KeyCode.F2,
+					},
+					["MainFont"] = Enum.Font.Arial,
+				}
+			
+			]]
+			information.ToggleOn = list["ToggleOn"] or information.ToggleOn
+			information.ToggleOff = list["ToggleOff"] or information.ToggleOff
+			information.ButtonBackground = list["ButtonBackground"] or information.ButtonBackground
+			information.SeperatorColor = list["SeperatorColor"] or information.SeperatorColor
+			information.ButtonTextColor = list["ButtonTextColor"] or information.ButtonTextColor
+			information.SectionTextColor = list["SectionTextColor"] or information.SectionTextColor
+			information.Background = list["Background"] or information.Background
+			information.TitleColorBc = list["TitleColorBc"] or information.TitleColorBc
+			information.TitleColorTxt = list["TitleColorTxt"] or information.TitleColorTxt
+			information.ButtonNotSelectedBc = list["ButtonNotSelectedBc"] or information.ButtonNotSelectedBc
+			information.ButtonNotSelectedTxt = list["ButtonNotSelectedTxt"] or information.ButtonNotSelectedTxt
+			information.ButtonSelectedBc = list["ButtonSelectedBc"] or information.ButtonSelectedBc
+			information.ButtonSelectedTxt = list["ButtonSelectedTxt"] or information.ButtonSelectedTxt
+			information.Images.Close = list["CloseIMG"] or information.Images.Close
+			information.Images.Minimize = list["MinimizeIMG"] or information.Images.Minimize
+			information.Keybinds.Open = list["OpenKEY"] or information.Keybinds.Open
+			information.MainFont = list["MainFont"] or information.MainFont
+			information.Size = list["Size"] or information.Size
+		end
+
+		
+		local buttons = {}
+		local parentnew = newers.CreateGui(nil, nil)
+		-- Add Buttons by "Table"
+		function info.AddButtons(tableer)
+			buttons = tableer
+		end
+		
+		-- Sets new parent for "Folder" frame and other stuff
+		function info.ChangeParentOfGui(newparent)
+			parentnew.Parent = newparent
+		end
+		
+		local function create_notifaction(title,text,icon)
+			task.wait()
+			game:GetService("StarterGui"):SetCore("SendNotification",{
+				Title = title or "", -- Required
+				Text = text or "", -- Required
+				Icon = icon or "" -- Optional
+			})
+		end
+
+		
+		-- makes "Folder" alike
+		function info.CreateFolder(title)
+			
+			local Frame = newers.CreateFrame(parentnew, "Folder", {
+				["BackgroundColor3"] = information.Background,
+				["BackgroundTransparency"] = 0,
+				["BorderSizePixel"] = 0,
+				["RoundCorner"] = 5,
+				["AnchorPoint"] = Vector2.new(0.5,0.5),
+				["Position"]= UDim2.new(0.5,0,0.5,0),
+				["Size"] = information.Size,
+				["Draggable"] = true
+			})
+			
+			
+			local current_selected = ""
+			local page_etc = {}
+			local page_frame = nil
+			local pages_ = {}
+			
+			local function creator_newemptyframe(name,parent, visible)
+				local frame = Instance.new("CanvasGroup",parent)
+				frame.Name = name or "empty"
+				frame.Size = UDim2.new(1, 0, 1, 0)
+				frame.BackgroundTransparency = 1
+				frame.AnchorPoint = Vector2.new(0.5,0.5)
+				frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+				
+				local scroll = Instance.new("ScrollingFrame", frame)
+				scroll.Name = "ScrollingFrame"
+				scroll.AnchorPoint = Vector2.new(0.5,0.5)
+				scroll.Position = UDim2.new(0.5,0,0.5,0)
+				scroll.Size = UDim2.new(1,0,1,0)
+				scroll.BackgroundTransparency = 1
+				scroll.ScrollBarThickness = 5
+				scroll.ScrollingDirection = Enum.ScrollingDirection.Y
+				scroll.AutomaticCanvasSize=Enum.AutomaticSize.Y
+				scroll.CanvasSize=UDim2.new(0,0,0,0)
+				return frame
+			end
+			
+			-- Get Current Selected (STRING)
+			function page_etc:GetCurrentSelected()
+				return current_selected
+			end
+			local h = 0
+			-- Add a new page!
+			function page_etc.AddPage(name, activated)
+				activated = activated or false
+				local page = creator_newemptyframe(name,page_frame, activated)
+				pages_[name] = page
+				local scroll = page:FindFirstChildWhichIsA("ScrollingFrame")
+				print(#pages_)
+				if h==0 then
+					page.GroupTransparency = 0
+				else
+					page.GroupTransparency = 1
+					page.Visible = false
+				end
+				h+=1
+				
+				local uilist = Instance.new("UIListLayout", scroll)
+				uilist.HorizontalAlignment = Enum.HorizontalAlignment.Center
+				uilist.Padding = UDim.new(0,7)
+				local togglers = {}
+				
+				function togglers.NewButton(settings)
+					local buttonstuff = {}
+
+					settings = settings or {
+						["Title"] = "Hello World!",
+					
+						["TurnedOnFunction"] = nil,
+						["TurnedOffFunction"] = nil,
+						["ChangedFunction"] = nil,
+						
+						["Toggled"] = false,
+						["BindedKey"] = nil,
+						["CustomButtonText"] = "button",
+						["InputedString"] = nil,
+						
+						["DropdownValue"] = {
+							"Test",
+							"Test2",
+							"Test3"
+						},
+						
+						["SliderValue"] = {
+							Current = 0,
+							Min = 0,
+							Max = 1,
+						},
+						
+						["InformationText"] = "",
+						["Information"] = false,
+						
+						["Dropdown"] = false,
+						["Toggler"] = true,
+						["Slider"] = false,
+						["StringInput"] = false,
+						["Button"] = false,
+						["Keybind"] = false,
+					}
+					local string_information = nil
+					local keybind_frame = nil
+					local slider_num = 0
+					local activated_toggler = false
+					local dropdown_selected = "nil"
+					local button = Instance.new("Frame",scroll)
+					local uistroke = Instance.new("UIStroke", button)
+					local uicorner = Instance.new("UICorner",button)
+					local textlabel = Instance.new("TextLabel",button)
+					textlabel.Size = UDim2.new(0.55,0,1,0)
+					textlabel.Position = UDim2.new(0.05,0,0,0)
+					textlabel.TextXAlignment = Enum.TextXAlignment.Left
+					textlabel.TextYAlignment = Enum.TextYAlignment.Center
+					textlabel.BackgroundTransparency = 1
+					textlabel.Font = information.MainFont
+					textlabel.TextColor3 = information.ButtonTextColor
+					textlabel.TextScaled = true
+					uicorner.CornerRadius = UDim.new(0,3)
+					uistroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+					uistroke.Color = Color3.fromRGB(66, 66, 66)
+					uistroke.Thickness = 2
+					textlabel.Text = settings.Title or "Label"
+					button.Size = UDim2.new(0.85,0,0.1,0)
+					button.BackgroundColor3 = information.ButtonBackground
+					uistroke.Color = newers.AddColor(button.BackgroundColor3,Color3.fromRGB(16,16,16))
+					if settings.Button==true then
+						local textbutton = Instance.new("TextButton",button)
+						textbutton.Size = UDim2.new(1,0,.65,0)
+						textbutton.TextScaled = true
+						textbutton.Text = settings.CustomButtonText or "button"
+						textbutton.Position = UDim2.new(-0.05,0,0.5,0)
+						textbutton.AnchorPoint=Vector2.new(0,0.5)
+						textbutton.TextColor3 = Color3.fromRGB(255,255,255)
+						textbutton.BackgroundTransparency=1
+						textbutton.TextTransparency = 0.5
+						textbutton.Font = information.MainFont
+						textbutton.TextXAlignment = Enum.TextXAlignment.Right
+						textbutton.MouseButton1Click:Connect(function()
+							if settings["TurnedOnFunction"] then
+								settings["TurnedOnFunction"]()
+							end
+						end)
+					elseif settings.Dropdown == true then
+						local keybindp = Instance.new("Frame",button)
+						keybindp.Size = UDim2.new(0.3,0,0.95,0)
+						keybindp.Position = UDim2.new(0.8,0,0.5,0)
+						keybindp.AnchorPoint = Vector2.new(0.5,0.5)
+						keybindp.BackgroundColor3 = newers.SubtractColor(information.ButtonBackground,Color3.fromRGB(20,20,20))
+						local uicorner = Instance.new("UICorner")
+						uicorner.Parent = keybindp
+						uicorner.CornerRadius = UDim.new(0,5)
+						
+						local textlabel = Instance.new("TextButton",keybindp)
+						textlabel.Size = UDim2.new(1,0,1,0)
+						textlabel.TextXAlignment = Enum.TextXAlignment.Center
+						textlabel.TextYAlignment = Enum.TextYAlignment.Center
+						textlabel.BackgroundTransparency = 1
+						textlabel.TextColor3 = information.ButtonTextColor
+						textlabel.Font = information.MainFont
+						textlabel.TextScaled = true
+						textlabel.Text = settings.DropdownValue[1] or ". . ."
+						dropdown_selected = settings.DropdownValue[1] or ". . ."
+						
+						local scrollingframe = Instance.new("ScrollingFrame",keybindp)
+						scrollingframe.Size = UDim2.new(1,0,0,0)
+						scrollingframe.BackgroundTransparency = 1
+						scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
+						scrollingframe.AutomaticCanvasSize = Enum.AutomaticSize.Y
+						scrollingframe.ScrollBarThickness = 0
+						scrollingframe.ScrollBarImageTransparency = 0.5
+						scrollingframe.BackgroundColor3=information.ButtonBackground
+						scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+						local uilistlayout = Instance.new("UIListLayout",scrollingframe)
+						uilistlayout.FillDirection = Enum.FillDirection.Vertical
+						uilistlayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+						uilistlayout.VerticalAlignment = Enum.VerticalAlignment.Top
+				
+			
+						textlabel.MouseButton1Click:Connect(function()
+							for i,v in pairs(scrollingframe:GetChildren()) do
+								if v:IsA("TextButton") then
+									v:Destroy()
+								end
+							end
+							for i,v in pairs(settings.DropdownValue) do
+								button.ZIndex = 1
+								local button = Instance.new("TextButton",scrollingframe)
+								button.Size = UDim2.new(1,0,0,25)
+								button.TextScaled = true
+								button.Text = v
+								button.BackgroundColor3 = information.ButtonBackground
+								button.TextColor3 = Color3.fromRGB(255,255,255)
+								button.Font = information.MainFont
+								button.MouseButton1Click:Connect(function()
+									if settings["TurnedOnFunction"] then
+										settings["TurnedOnFunction"](v)
+									end
+									if settings["ChangedFunction"] then
+										settings["ChangedFunction"](v)
+									end
+									dropdown_selected = v
+									textlabel.Text = v
+									scrollingframe:TweenPosition(UDim2.new(0,0,0,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quint,0.15)
+									scrollingframe:TweenSize(UDim2.new(1,0,0,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quint,0.15)
+								end)
+							end
+							button.ZIndex = 5
+							scrollingframe:TweenPosition(UDim2.new(0,0,1,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quint,0.15)
+							scrollingframe:TweenSize(UDim2.new(1,0,3,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quint,0.15)
+						end)
+						
+					elseif settings.Slider == true then
+						
+						local keybindp = Instance.new("Frame",button)
+						keybindp.Size = UDim2.new(0.3,0,0.95,0)
+
+						keybindp.Position = UDim2.new(0.8,0,0.5,0)
+						keybindp.AnchorPoint = Vector2.new(0.5,0.5)
+						keybindp.BackgroundColor3 = newers.SubtractColor(information.ButtonBackground,Color3.fromRGB(20,20,20))
+						local uicorner = Instance.new("UICorner")
+						uicorner.Parent = keybindp
+						uicorner.CornerRadius = UDim.new(1,0)
+						local textlabel = Instance.new("TextLabel",keybindp)
+						textlabel.Size = UDim2.new(1,0,1,0)
+						textlabel.TextXAlignment = Enum.TextXAlignment.Center
+						textlabel.TextYAlignment = Enum.TextYAlignment.Center
+						textlabel.BackgroundTransparency = 1
+						textlabel.TextColor3 = information.ButtonTextColor
+						textlabel.TextScaled = true
+						textlabel.ZIndex = 5
+						textlabel.Text = settings.SliderValue.Current or "0"
+						textlabel.TextTransparency = 0.15
+						local circle = Instance.new("Frame",keybindp)
+						circle.Size = UDim2.new(0.185,0,0.7,0)
+						circle.AnchorPoint = Vector2.new(0.5,0.5)
+						circle.Position = UDim2.new(0.16,0,0.5,0)
+						circle.BackgroundColor3 = Color3.fromRGB(255,255,255)
+						circle.BorderSizePixel = 0
+						local uicorner = Instance.new("UICorner")
+						uicorner.Parent = circle
+						uicorner.CornerRadius = UDim.new(1,0)
+						
+						local trigger = Instance.new("ImageButton",keybindp)
+						trigger.Size = UDim2.new(1,0,1,0)
+						trigger.AnchorPoint = Vector2.new(0.5,0.5)
+						trigger.Position = UDim2.new(0.5,0,0.5,0)
+						trigger.BackgroundTransparency = 1
+						trigger.ImageTransparency = 1
+						trigger.Name = "Clicker"
+						local holds = false
+						local con = nil
+						local mouse = plr:GetMouse()
+						local num = Instance.new("NumberValue")
+						trigger.MouseButton1Up:Connect(function()
+							holds = false
+							if con~=nil then
+								con:Disconnect()
+							end
+						end)
+						
+						mouse.Button1Up:Connect(function()
+							holds = false
+							if con~=nil then
+								con:Disconnect()
+							end
+						end)
+						
+						num.Changed:Connect(function(a)
+							if settings["ChangedFunction"] then
+								settings["ChangedFunction"](a)
+							end
+						end)
+						textlabel.Font = information.MainFont
+						textlabel.Text = settings.SliderValue.Min
+						trigger.MouseButton1Down:Connect(function()
+							holds = true
+							con = game["Run Service"].RenderStepped:Connect(function()
+								if holds==false then
+									con:Disconnect()
+									return
+								end
+								local mathX = trigger.AbsoluteSize.X
+								local mathX2 = trigger.AbsolutePosition.X
+								local location = mouse.X
+								local CLAMPminimumXposition = 0.16
+								local CLAMPmaximumXposition = 0.852
+								local middle = (CLAMPminimumXposition-CLAMPmaximumXposition)/2
+								local percentage = (location - mathX2) / mathX
+								percentage = math.clamp(percentage,CLAMPminimumXposition,CLAMPmaximumXposition)
+								local min = settings.SliderValue.Min
+								local max = settings.SliderValue.Max
+								local increment = settings.SliderValue.Increment
+								local value = math.round(min + ((max - min) * ((circle.Position.X.Scale - 0.16) / (0.852 - 0.16))))
+								circle.Position = UDim2.new(percentage,0,0.5,0)
+								textlabel.Text = value
+								settings.SliderValue.Current = value
+								num.Value = value
+								slider_num = value
+							end)
+							
+						end)
+
+					
+					elseif settings.Information == true then
+						
+						textlabel.TextTransparency = 1
+						textlabel.Font = information.MainFont
+						local str = Instance.new("ScrollingFrame",button)
+						button.Size = UDim2.new(0.85,0,0.45,0)
+						str.Size = UDim2.new(1,0,0.95,0)
+						str.Position = UDim2.new(0.5,0,0.5,0)
+						str.AnchorPoint = Vector2.new(0.5,0.5)
+						str.CanvasSize = UDim2.new(0,0,0,0)
+						str.AutomaticCanvasSize = Enum.AutomaticSize.Y
+						str.BackgroundTransparency = 0.5
+						str.BackgroundColor3 =newers.SubtractColor(information.ButtonBackground,Color3.fromRGB(20,20,20)) 
+
+						local textlabel = Instance.new("TextLabel",str)
+						textlabel.Font = information.MainFont
+						textlabel.Size = UDim2.new(1,0,1,0)
+						textlabel.BackgroundTransparency = 1
+						textlabel.TextScaled = true
+						textlabel.TextColor3 = information.ButtonTextColor
+						textlabel.TextXAlignment = Enum.TextXAlignment.Left
+						textlabel.TextYAlignment = Enum.TextYAlignment.Center
+						textlabel.Text = settings.InformationText or "Hello World!"
+						textlabel.Name = "StringInput"
+						
+					elseif settings.StringInput == true then
+
+						local str = Instance.new("Frame",button)
+						str.Size = UDim2.new(0.5,0,0.95,0)
+						str.Position = UDim2.new(0.73,0,0.5,0)
+						str.AnchorPoint = Vector2.new(0.5,0.5)
+						str.BackgroundTransparency = 1
+						
+						local textbox = Instance.new("TextBox",str)
+						textbox.Size = UDim2.new(1,0,1,0)
+						textbox.BackgroundTransparency = 0.5
+						textbox.TextScaled = true
+						textbox.BackgroundColor3 = newers.SubtractColor(information.ButtonBackground,Color3.fromRGB(20,20,20))
+						textbox.TextColor3 = information.ButtonTextColor
+						textbox.TextXAlignment = Enum.TextXAlignment.Left
+						textbox.TextYAlignment = Enum.TextYAlignment.Center
+						textbox.TextEditable = true
+						textbox.Text = ""
+						textbox.Name = "StringInput"
+						
+						textbox.Changed:Connect(function()
+							if settings["ChangedFunction"] then
+								settings["ChangedFunction"](textbox.Text)
+							end
+							string_information = textbox.Text
+						end)
+					elseif settings.Toggler==true then
+						
+						local toggled = settings.Toggled or false
+						activated_toggler = toggled
+						local keybindp = Instance.new("Frame",button)
+						keybindp.Size = UDim2.new(0.25,0,0.95,0)
+						keybindp.Position = UDim2.new(0.84,0,0.5,0)
+						keybindp.AnchorPoint = Vector2.new(0.5,0.5)
+						keybindp.BackgroundColor3 = newers.SubtractColor(information.ButtonBackground,Color3.fromRGB(20,20,20))
+						
+						local uicorner = Instance.new("UICorner")
+						uicorner.Parent = keybindp
+						uicorner.CornerRadius = UDim.new(1,0)
+						
+						local circle = Instance.new("Frame",keybindp)
+						circle.Size = UDim2.new(0.23,0,0.7,0)
+						circle.AnchorPoint = Vector2.new(0.5,0.5)
+						circle.Position = UDim2.new(0.17,0,0.5,0)
+						circle.BackgroundColor3 = Color3.fromRGB(255,255,255)
+						circle.BorderSizePixel = 0
+						
+						if toggled == true then
+							circle:TweenPosition(UDim2.new(0.83,0,0.5,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quint,0.4,true)
+							game.TweenService:Create(keybindp,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundColor3 = information.ToggleOn}):Play()
+						else
+							game.TweenService:Create(keybindp,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundColor3 = information.ToggleOff}):Play()
+						end
+						
+						
+						local uicorner = Instance.new("UICorner")
+						uicorner.Parent = circle
+						uicorner.CornerRadius = UDim.new(1,0)
+						
+						local trigger = Instance.new("ImageButton",keybindp)
+						trigger.Size = UDim2.new(1,0,1,0)
+						trigger.BackgroundTransparency = 1
+						trigger.ImageTransparency = 1
+						trigger.Name = "Clicker"
+						trigger.MouseButton1Click:Connect(function()
+							if toggled == false then
+								toggled = true
+								trigger.BackgroundColor3 = Color3.fromRGB(255,255,255)
+								game.TweenService:Create(keybindp,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundColor3 = information.ToggleOn}):Play()
+								game.TweenService:Create(circle,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Size = UDim2.new(0.23,0,0.5,0)}):Play()
+								task.delay(0.15,function()
+									game.TweenService:Create(circle,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Size = UDim2.new(0.23,0,0.7,0)}):Play()
+								end)
+								circle:TweenPosition(UDim2.new(0.83,0,0.5,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quint,0.4,true)
+								if settings["TurnedOnFunction"] then
+									settings["TurnedOnFunction"](true)
+								end
+							else
+								toggled = false
+								game.TweenService:Create(keybindp,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{BackgroundColor3 = information.ToggleOff}):Play()
+
+								game.TweenService:Create(circle,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Size = UDim2.new(0.23,0,0.5,0)}):Play()
+								task.delay(0.15,function()
+									game.TweenService:Create(circle,TweenInfo.new(0.2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Size = UDim2.new(0.23,0,0.7,0)}):Play()
+								end)
+								trigger.BackgroundColor3 = Color3.fromRGB(30,30,30)
+								circle:TweenPosition(UDim2.new(0.17,0,0.5,0),Enum.EasingDirection.Out,Enum.EasingStyle.Quint,0.4,true)
+								if settings["TurnedOffFunction"] then
+									settings["TurnedOffFunction"](false)
+								end
+							end
+							activated_toggler = toggled
+						end)
+						trigger.Name = "Keybind"
+						trigger.Visible = true
+						
+					elseif settings.Keybind==true then
+						
+						local keybindp = Instance.new("Frame",button)
+						keybindp.Size = UDim2.new(0.09,0,0.95,0)
+						keybindp.Position = UDim2.new(0.9,0,0.5,0)
+						keybindp.AnchorPoint = Vector2.new(0.5,0.5)
+						
+						local textlabel = Instance.new("TextButton",keybindp)
+						textlabel.Size = UDim2.new(1,0,1,0)
+						textlabel.BackgroundTransparency = 1
+						textlabel.TextXAlignment = Enum.TextXAlignment.Center
+						textlabel.TextYAlignment = Enum.TextYAlignment.Center
+						textlabel.TextScaled = true
+						textlabel.TextColor3 = information.ButtonTextColor
+						textlabel.TextStrokeTransparency = 1
+						textlabel.Font = information.MainFont
+						textlabel.Text = "nil"
+						textlabel.Name = "Keybind"
+						local selecting = false
+						local selected_keybind = false
+						local selected_whichonekeybind = nil
+						local con = nil
+						if settings.BindedKey ~= nil then
+							selected_keybind = true
+							selected_whichonekeybind = settings.BindedKey.Name
+							textlabel.Text = tostring(settings.BindedKey.Name)
+						end
+						textlabel.MouseButton1Click:Connect(function()
+							selecting = true
+							textlabel.Text = ". . ."
+							con = game.UserInputService.InputBegan:Connect(function(inp,gpe)
+								if gpe then return end
+								if selecting then
+									if inp.KeyCode ~= nil then
+										if settings["ChangedFunction"] then
+											settings["ChangedFunction"](tostring(inp.KeyCode.Name))
+										end
+										con:Disconnect()
+										textlabel.Text = tostring(inp.KeyCode.Name)
+										selecting = false
+										task.wait(0.01)
+										selected_keybind = true
+										selected_whichonekeybind = inp.KeyCode.Name
+									end
+								end
+							end)
+						end)
+						
+						game.UserInputService.InputBegan:Connect(function(inp, gpe)
+							if selected_keybind == false then return end
+							if gpe then return end
+							if inp.KeyCode.Name == selected_whichonekeybind then
+								if settings["TurnedOnFunction"] then
+									settings["TurnedOnFunction"]()
+								end
+							end
+						end)						
+
+						local uistroke = Instance.new("UIStroke", keybindp)
+						local uicorner = Instance.new("UICorner",keybindp)
+						uicorner.CornerRadius = UDim.new(0,3)
+						uistroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+						uistroke.Color = newers.SubtractColor(information.ButtonBackground,Color3.fromRGB(5,5,5))
+						uistroke.Thickness = 3
+						keybindp.BackgroundColor3 = newers.SubtractColor(information.ButtonBackground,Color3.fromRGB(25,25,25))
+						keybind_frame = selected_whichonekeybind
+					end
+					
+
+					function buttonstuff:GetInformation()
+						if settings.Keybind == true then
+							return keybind_frame
+						elseif settings.StringInput == true then
+							return string_information
+						elseif settings.Slider==true then
+							return slider_num
+						elseif settings.Toggler == true then
+							return activated_toggler
+						end
+					end
+
+					
+					return buttonstuff
+				end
+				
+				function togglers.Section(text)
+					local titler = Instance.new("Frame")
+					titler.Size = UDim2.new(0.95,0,0.1,0)
+					titler.AnchorPoint = Vector2.new(0.5,0)
+					titler.Position = UDim2.new(0.5,0,0,0)
+					titler.BackgroundTransparency = 1
+					
+					local textlabel = Instance.new("TextLabel")
+					textlabel.Size = UDim2.new(1,0,0.5,0)
+					textlabel.BackgroundTransparency = 1
+					textlabel.Text = text
+					textlabel.Font = information.MainFont
+					textlabel.TextScaled = true
+					textlabel.TextColor3 = information.SectionTextColor
+					textlabel.TextStrokeTransparency = 0.5
+					textlabel.TextXAlignment = Enum.TextXAlignment.Left
+					textlabel.Parent = titler
+					textlabel.TextTransparency = 0.25
+					titler.Parent = scroll
+				end
+				
+				function togglers.AddSeperator()
+					local seperator = Instance.new("Frame")
+					seperator.Size = UDim2.new(.95,0,0.1,0)
+					seperator.BackgroundTransparency = 1
+					local mini_seperator_shower = Instance.new("Frame")
+					mini_seperator_shower.Size = UDim2.new(0.9,0,0.05,0)
+					page:GetPropertyChangedSignal("GroupTransparency"):Connect(function()
+						if page.GroupTransparency == 0 then
+							mini_seperator_shower.Size = UDim2.new(0,0,0.05,0)
+						else
+							task.delay(0.02,function()
+								tween:Create(mini_seperator_shower, TweenInfo.new(0.2,Enum.EasingStyle.Back), {Size = UDim2.new(0.9,0,0.05,0)}):Play()
+							end)
+						end
+					end)
+					mini_seperator_shower.BackgroundTransparency = 0.15
+					mini_seperator_shower.AnchorPoint = Vector2.new(0.5,0.5)
+					mini_seperator_shower.Position = UDim2.new(0.5,0,0.5,0)
+					mini_seperator_shower.BackgroundColor3 = information.SeperatorColor
+					local uicorner = Instance.new("UICorner")
+					uicorner.Parent = mini_seperator_shower
+					uicorner.CornerRadius = UDim.new(1,0)
+					
+					mini_seperator_shower.Parent = seperator
+					seperator.Parent = scroll
+				end				
+
+				return togglers
+			end
+			
+			
+			local titleTextlabel = Instance.new("Frame", Frame)
+			titleTextlabel.BackgroundColor3 = information.TitleColorBc
+			titleTextlabel.Size = UDim2.new(1, 0, 0.1,0)
+			
+			local minimize = Instance.new("ImageButton", titleTextlabel)
+			minimize.AnchorPoint = Vector2.new(0.5,0.5)
+			minimize.Position = UDim2.new(0.87, 0, 0.5, 0)
+			minimize.Size = UDim2.new(0,32,0,32)
+			minimize.BackgroundTransparency = 1
+			minimize.Image = information.Images.Minimize
+			minimize.ImageTransparency = 0.25
+			minimize.BorderSizePixel = 0
+			minimize.BackgroundColor3 = Color3.fromRGB(168, 168, 168)
+			minimize.MouseEnter:Connect(function()
+				tween:Create(minimize, TweenInfo.new(0.2), {BackgroundTransparency = 0.5}):Play()
+			end)
+			minimize.MouseLeave:Connect(function()
+				tween:Create(minimize, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
+			end)
+
+			minimize.MouseButton1Click:Connect(function()
+				Frame.Visible = false
+			end)
+			
+			local closebutton = Instance.new("ImageButton", titleTextlabel)
+			closebutton.AnchorPoint = Vector2.new(0.5,0.5)
+			closebutton.Position = UDim2.new(0.95, 0, 0.5, 0)
+			closebutton.Size = UDim2.new(0,32,0,32)
+			closebutton.BackgroundTransparency = 1
+			closebutton.Image = information.Images.Close
+			closebutton.ImageTransparency = 0.25
+			closebutton.BorderSizePixel = 0
+			closebutton.BackgroundColor3 = Color3.fromRGB(168, 18, 18)
+			closebutton.MouseEnter:Connect(function()
+				tween:Create(closebutton, TweenInfo.new(0.2), {BackgroundTransparency = 0.5}):Play()
+			end)
+			closebutton.MouseLeave:Connect(function()
+				tween:Create(closebutton, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
+			end)
+
+			closebutton.MouseButton1Click:Connect(function()
+				Frame:Destroy()
+			end)
+			local h = 0
+			Frame:GetPropertyChangedSignal("Visible"):Connect(function()
+				if Frame.Visible == false and h==0 then
+					h=1
+					create_notifaction("Info","Press ".. information.Keybinds.Open.Name.. " to open the UI", "rbxassetid://6031075929")
+				end
+			end)
+			
+			game.UserInputService.InputBegan:Connect(function(key)
+				if key.KeyCode == information.Keybinds.Open then
+					Frame.Visible = true
+				end
+			end)
+			
+			local frametextlabelnew = Instance.new("TextLabel",titleTextlabel)
+			frametextlabelnew.AnchorPoint = Vector2.new(0.5,0.5)
+			frametextlabelnew.Text = title or "Hello World!"
+			frametextlabelnew.BackgroundTransparency = 1
+			frametextlabelnew.Size = UDim2.new(1,0,0.8,0)
+			frametextlabelnew.Font = information.MainFont
+			frametextlabelnew.Position = UDim2.new(0.52, 0, 0.5, 0)
+			frametextlabelnew.TextScaled = true
+			frametextlabelnew.TextColor3 = information.TitleColorTxt
+			frametextlabelnew.TextStrokeTransparency = 0.5
+			frametextlabelnew.TextXAlignment = Enum.TextXAlignment.Left
+			frametextlabelnew.TextYAlignment = Enum.TextYAlignment.Center
+			frametextlabelnew.TextStrokeTransparency = 1
+			
+			local FrameForButtons = Instance.new("ScrollingFrame", Frame)
+			FrameForButtons.Size = UDim2.new(0.9, 0, 0.15, 0)
+			FrameForButtons.ScrollBarThickness = 5
+			FrameForButtons.Position = UDim2.new(0.5, 0, 0.15, 0)
+			FrameForButtons.AnchorPoint = Vector2.new(0.5,0.5)
+			FrameForButtons.BackgroundTransparency = 1
+			FrameForButtons.ScrollingDirection = Enum.ScrollingDirection.X
+			FrameForButtons.CanvasSize = UDim2.new(0, 0, 0, 0)
+			FrameForButtons.AutomaticCanvasSize = Enum.AutomaticSize.X
+			
+			page_frame = Instance.new("Frame", Frame)
+			page_frame.BackgroundTransparency = 1
+			page_frame.Size = UDim2.new(1, 0, 0.8, 0)
+			page_frame.Name = "Page"
+			page_frame.Visible = true
+			page_frame.AnchorPoint = Vector2.new(0.5,0.5)
+			page_frame.Position = UDim2.new(0.5, 0, 0.6, 0)
+			page_frame.BackgroundTransparency = 1
+			
+			local uilist = Instance.new("UIListLayout", FrameForButtons)
+			uilist.FillDirection = Enum.FillDirection.Horizontal
+			uilist.SortOrder = Enum.SortOrder.LayoutOrder
+			uilist.Padding = UDim.new(0,5)
+			FrameForButtons.CanvasSize = UDim2.new(0, 0, 0, 0)
+			FrameForButtons.AutomaticCanvasSize = Enum.AutomaticSize.XY
+			uilist.VerticalAlignment = Enum.VerticalAlignment.Center
+			
+			local arrayofbuttons = {}
+			
+			for i,v in pairs(buttons) do
+				local new = Instance.new("TextButton", FrameForButtons)
+				new.Text = v
+				new.Size = UDim2.new(0.3, 0, 0.5, 0)
+				new.BackgroundTransparency = 0.15
+				new.BackgroundColor3 = information.ButtonNotSelectedBc
+				new.Font = information.MainFont
+				local c = information.ButtonNotSelectedBc
+				new.TextScaled = true
+				new.TextWrapped = true
+				new.TextStrokeTransparency = 0
+				new.BorderSizePixel = 0
+				new.TextStrokeTransparency = 1
+				new.TextColor3 = information.ButtonNotSelectedTxt
+				local c2 = information.ButtonSelectedTxt
+				new.AutomaticSize = Enum.AutomaticSize.X
+				new.AnchorPoint = Vector2.new(0.5,0.5)
+				new.Position = UDim2.new(0.5, 0, 0.5, 0)
+				local uicorner = Instance.new("UICorner", new)
+				uicorner.CornerRadius = UDim.new(1,0)
+				table.insert(arrayofbuttons, new)
+				
+				new.MouseButton1Click:Connect(function()
+					current_selected = new.Text
+					for i,v in pairs(pages_) do
+						game.TweenService:Create(v, TweenInfo.new(0.05,Enum.EasingStyle.Back), {GroupTransparency = 1}):Play()
+						task.delay(0.05,function()
+							if v~=pages_[new.Text] then
+								v.Visible = false
+							end
+						end)
+					end
+					
+					for i,v in pairs(arrayofbuttons) do
+						tween:Create(v, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255,255,255), BackgroundColor3 = c}):Play()
+					end
+					task.wait()
+					if pages_[new.Text] then
+						pages_[new.Text].Visible = true
+						game.TweenService:Create(pages_[new.Text], TweenInfo.new(0.15,Enum.EasingStyle.Back), {GroupTransparency = 0}):Play()
+					end
+					tween:Create(new, TweenInfo.new(0.1), {TextColor3 = c2	, BackgroundColor3 = Color3.fromRGB(222, 222, 222)}):Play()
+				end)
+				
+				if i==1 then
+					current_selected = new.Text
+					if pages_[new.Text] then
+						game.TweenService:Create(pages_[new.Text], TweenInfo.new(0.15,Enum.EasingStyle.Back), {GroupTransparency = 0}):Play()
+					end
+					tween:Create(new, TweenInfo.new(0.1), {TextColor3 = c2, BackgroundColor3 = Color3.fromRGB(222,222,222)}):Play()
+				end
+			end
+			
+			return page_etc
+		end
+		
+		return info
+	end
+	
+	function newers.Hint(title, long)
+		local hint = Instance.new("Hint",workspace)
+		hint.Text = title or "Hello World!"
+		long = long or 1
+		task.delay(long, function()
+			hint:Destroy()
+		end)
+	end
+	
+	function newers.Message(title, long)
+		local hint = Instance.new("Message",workspace)
+		hint.Text = title or "Hello World!"
+		long = long or 1
+		task.delay(long, function()
+			hint:Destroy()
+		end)
+	end
+	
+	function newers.CreateFrame(parent, name, TableSettingList)
+		
+		--[[
+		
+		TableSettingList is array with settings like this:
+		
+		Table = {
+			
+			["BackgroundTransparency"] = 0.15,
+			["BackgroundColor3"] = Color3.fromRGB(0,0,0),
+			["Size"] = UDim2.new(0, 50, 0, 50),
+			["Position"] = UDim2.new(0.5, 0, 0.5, 0),
+			["AnchorPoint"] = Vector2.new(0.5, 0.5),
+			["BorderSizePixel"] = 0,
+			["ZIndex"] = 50,
+			["Draggable"] = true,
+			["RoundCorner"] = 16 
+		}
+		
+		]]--
+		
+		local frame = Instance.new("CanvasGroup")
+		frame.Parent = parent or newers.CreateGui()
+		frame.Name = name or "Template #".. math.random(1, 1000000000)
+		frame.ClipsDescendants = false
+		frame.BackgroundTransparency = TableSettingList["BackgroundTransparency"] or 0.5
+		frame.BackgroundColor3 = TableSettingList["BackgroundColor3"] or Color3.fromRGB(255, 255, 255)
+		frame.Size = TableSettingList["Size"] or UDim2.new(0, 50, 0, 50)
+		frame.Position = TableSettingList["Position"] or UDim2.new(0.5, 0, 0.5, 0)
+		frame.AnchorPoint = TableSettingList["AnchorPoint"] or Vector2.new(0.5, 0.5)
+		
+		local uiround = Instance.new("UICorner")
+		uiround.Parent = frame
+		uiround.CornerRadius = UDim.new(0, TableSettingList["RoundCorner"] or 0)
+		
+		if TableSettingList["Draggable"]==true then
+			local uidrag = Instance.new("UIDragDetector")
+			uidrag.Parent = frame			
+			uidrag.ResponseStyle = Enum.UIDragDetectorResponseStyle.Scale
+		end
+		
+		frame.BorderSizePixel = TableSettingList["BorderSizePixel"] or 1
+		frame.ZIndex = TableSettingList["ZIndex"] or 1
+		
+		return frame
+	end
+	
+	return newers
+end
+return module

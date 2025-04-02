@@ -1,0 +1,402 @@
+local RBX = {}
+RBX.__index = RBX
+
+function RBX:CreateScreen()
+
+	local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+	local screen = Instance.new("ScreenGui", playerGui)
+	screen.Name = "RBXHUD"
+	
+	if game.UserInputService.TouchEnabled==true then
+		local frame = Instance.new("TextLabel",screen)
+		frame.Position = UDim2.new(0,30,0,30)
+		frame.BackgroundColor3 = Color3.fromRGB(163,162,165)
+		frame.BackgroundTransparency = 0.5
+		frame.BorderSizePixel = 0
+		frame.Size = UDim2.new(0,350,0,250)
+		frame.Text = "OLD ROBLOX GUI BY C00LSPAWNN IS NOT OPTIMIZED ON MOBILES."
+		frame.Font = Enum.Font.Cartoon
+		frame.FontFace.Weight = Enum.FontWeight.Bold
+		frame.TextScaled = true
+		frame.TextColor3 = Color3.fromRGB(0,0,0)
+
+		game.Debris:AddItem(frame, 3)
+	end
+
+	
+	screen:AddTag("OLD RBX HUD MADE BY C00LSPAWNN")
+	local RBX2 = {}
+	local style_Button = Enum.ButtonStyle.RobloxButton
+	local frame_Style = Enum.FrameStyle.RobloxRound
+	function RBX2.Hint(Text:string,DestroyTime:number)
+		local hint = Instance.new("Hint", workspace)
+		hint.Text = Text or "( NO INFORMATION FOUND )"
+		game.Debris:AddItem(hint, DestroyTime or 3)		
+		
+		return hint
+	end
+	
+	function RBX2.Message(Text:string, DestroyTime:number)
+		local message = Instance.new("Message", workspace)
+		message.Text = Text or "( NO INFORMATION FOUND )"
+		game.Debris:AddItem(message, DestroyTime or 3)	
+		
+		return message
+	end
+	
+	function RBX2:SetFrameStyle(style:Enum.FrameStyle)
+		frame_Style = style
+	end
+	
+	function RBX2:SetButtonStyle(style:Enum.ButtonStyle)
+		style_Button = style
+	end	
+
+	function RBX2:Setters(frame)
+		local RBX3 = {}
+		
+		function RBX3:GetInformation(Button:TextButton)
+			if Button:GetAttribute("CurrentSelected") then
+				return Button:GetAttribute("CurrentSelected")
+			else
+				RBX2.SmallerMessage("No Information Found", 2.5)
+			end
+		end
+		
+		function RBX3.CreateCloseButton()
+			local button = Instance.new("TextButton",frame)
+			button.Style = style_Button
+			button.Name = "CLOSE"
+			button.Text = "X"
+			button.TextScaled = true
+			button.Font = Enum.Font.Cartoon
+			button.FontFace.Weight = Enum.FontWeight.Bold
+			button.Size = UDim2.new(0.165,0,0.142,0)
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.Position = UDim2.new(1,0,0,0)
+			button.TextColor3 = Color3.fromRGB(255,255,255)
+			button.MouseButton1Click:Connect(function()
+				frame:Destroy()
+			end)
+		end
+		
+		function RBX3.CreateSlider(Settings,function_)
+			Settings = Settings or {
+				Max = 10,
+				Min = 0,
+				Increment = 1,
+			}
+			
+			local h = Settings.Min
+			
+			local button = Instance.new("TextButton",frame)
+			button.Style = Enum.ButtonStyle.RobloxButton
+			button.Text = Settings.Min
+			button.TextScaled = true
+			button.Font = Enum.Font.Cartoon
+			button.FontFace.Weight = Enum.FontWeight.Bold
+			button.Size = UDim2.new(0.33,0,0.142,0)
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.TextColor3 = Color3.fromRGB(255,255,255)
+			button:AddTag("SLIDER BUTTON")
+			button.Active = true
+			button.Interactable = true
+			button:SetAttribute("CurrentSelected",h)
+			local button_increase = Instance.new("TextButton",button)
+			button_increase.Name = "INCREASE"
+			button_increase.Text = ">"
+			button_increase.TextScaled = true
+			button_increase.Style = style_Button
+			button_increase.Font = Enum.Font.Cartoon
+			button_increase.FontFace.Weight = Enum.FontWeight.Bold
+			button_increase.Size = UDim2.new(0.66,0,1.5,10)
+			button_increase.AnchorPoint = Vector2.new(0.5,0.5)
+			button_increase.Position = UDim2.new(1.5,0,0.5,0)
+			button_increase.TextColor3 = Color3.fromRGB(255,255,255)
+			local button_decrease = nil
+			button_increase.MouseButton1Click:Connect(function()
+				local oldvalue = h
+				local value = oldvalue+Settings.Increment
+				
+				if value>Settings.Min then
+					button_decrease.Interactable = true
+					button_decrease.Active = true
+				end
+
+				if value>Settings.Max then
+					value = Settings.Max
+					button_increase.Active = false
+					button_increase.Interactable = false
+				end
+				h=value
+				local value2_test = value+0.15
+				if value2_test>=Settings.Max then
+					button_increase.Interactable = false
+					button_increase.Active = false
+				end
+				button.Text = string.format("%.1f", h)
+				button:SetAttribute("CurrentSelected",button.Text)
+				function_(tonumber(button.Text))
+			end)
+			
+			button_decrease = Instance.new("TextButton",button)
+			button_decrease.Name = "DECREASE"
+			button_decrease.Text = "<"
+			button_decrease.Interactable = false
+			button_decrease.Active = false
+			button_decrease.TextScaled = true
+			button_decrease.Style = style_Button
+			button_decrease.Font = Enum.Font.Cartoon
+			button_decrease.FontFace.Weight = Enum.FontWeight.Bold
+			button_decrease.Size = UDim2.new(0.66,0,1.5,10)
+			button_decrease.AnchorPoint = Vector2.new(0.5,0.5)
+			button_decrease.Position = UDim2.new(-0.5,0,0.5,0)
+			button_decrease.TextColor3 = Color3.fromRGB(255,255,255)
+			button_decrease.MouseButton1Click:Connect(function()
+				local oldvalue = h
+				local value = oldvalue-Settings.Increment
+				if value<Settings.Max then
+					button_increase.Interactable = true
+					button_increase.Active = true
+				end
+				if value<Settings.Min then
+					value = Settings.Min
+					button_decrease.Active = false
+					button_increase.Interactable = true
+					button_decrease.Interactable = false
+				end
+				h = value
+				local value2_test = value-0.15
+				if value2_test<Settings.Max then
+					button_increase.Interactable = true
+					button_increase.Active = true
+				end
+				if value2_test<Settings.Min then
+					button_decrease.Active = false
+					button_increase.Interactable = true
+					button_decrease.Interactable = false
+				end
+				button.Text = string.format("%.1f", h)
+				button:SetAttribute("CurrentSelected",button.Text)
+				function_(tonumber(button.Text))
+			end)
+			
+			return button
+		end
+		
+		function RBX3.CreateBoolButton(text, turned, function_)
+			local test = turned or false
+			local button = Instance.new("TextButton",frame)
+			button.Style = Enum.ButtonStyle.RobloxButton
+			button.TextScaled = true
+			button.Font = Enum.Font.Cartoon
+			button.Text = text
+			button.FontFace.Weight = Enum.FontWeight.Bold
+			button.Size = UDim2.new(0.495,0,0.145,0)
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.TextColor3 = Color3.fromRGB(255,255,255)
+			button:SetAttribute("CurrentSelected", turned or false)
+			
+			local buttontwo = Instance.new("TextButton",button)
+			buttontwo.Style = style_Button
+			buttontwo.TextScaled = true
+			buttontwo.Font = Enum.Font.Cartoon
+			
+			if turned==true then
+				buttontwo.Text = "X"
+			else
+				buttontwo.Text = ""
+			end
+			
+			buttontwo.FontFace.Weight = Enum.FontWeight.Bold
+			buttontwo.AnchorPoint = Vector2.new(0.5,0.5)
+			buttontwo.TextColor3 = Color3.fromRGB(255,255,255)
+			buttontwo.Size = UDim2.new(0.45,0,1.5,10)
+			buttontwo.AnchorPoint = Vector2.new(0.5,0.5)
+			buttontwo.Position = UDim2.new(1.3,0,0.5,0)
+			local b = 0
+			
+			buttontwo.MouseButton1Click:Connect(function()
+				test = not test
+				if test==true then
+					button:SetAttribute("CurrentSelected", true)
+					buttontwo.Text = "X"
+					function_(true)
+				else
+					button:SetAttribute("CurrentSelected", false)
+					buttontwo.Text = ""
+					function_(false)
+				end
+			end)
+			
+			task.delay(0.1,function()
+				local matheh = button.Position.X.Scale-0.05
+				button.Position = UDim2.new(matheh,0,button.Position.Y.Scale,0)
+			end)
+			
+			return button
+	
+		end
+		
+		function RBX3.TextboxButton(text, function_)
+			local button = Instance.new("TextButton",frame)
+			button.Style = Enum.ButtonStyle.RobloxButton
+			button.TextScaled = true
+			button.Text = ""
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.Size = UDim2.new(0.66,0,0.142,0)
+			local textbox = Instance.new("TextBox",button)
+			textbox.TextScaled = true
+			textbox.Font = Enum.Font.Cartoon
+			textbox.FontFace.Weight = Enum.FontWeight.Bold
+			textbox.TextColor3 = Color3.fromRGB(255,255,255)
+			textbox.Text = text
+			textbox.Size = UDim2.new(1,0,1,0)
+			textbox.AnchorPoint = Vector2.new(0.5,0.5)
+			textbox.Position = UDim2.new(0.5,0,0.5,0)
+			textbox.BackgroundTransparency = 1
+			textbox.ClearTextOnFocus = false
+			textbox.MultiLine = true
+			textbox:GetPropertyChangedSignal("Text"):Connect(function()
+				function_(textbox.Text)
+			end)
+			
+			return button
+		end
+		
+		function RBX3.CreateDropDownButton(text, StringList, selected, function_)
+			local button = Instance.new("TextButton",frame)
+			button.Style = style_Button
+			button.Text = text or StringList[1]
+			button.TextScaled = true
+			button.Font = Enum.Font.Cartoon
+			button.FontFace.Weight = Enum.FontWeight.Bold
+			button.Size = UDim2.new(0.66,0,0.142,0)
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.TextColor3 = Color3.fromRGB(255,255,255)
+			button:AddTag("DROPDOWN BUTTON")
+			button:SetAttribute("CurrentSelected", selected or "N/A")
+			local activated = false
+			local scrollingframe = nil
+			button.MouseButton1Click:Connect(function()
+				activated = not activated
+				if activated==true then
+					scrollingframe = Instance.new("ScrollingFrame",button)
+					scrollingframe.Size = UDim2.new(1,0,0,0)
+					game.TweenService:Create(scrollingframe,TweenInfo.new(0.1,Enum.EasingStyle.Quad,Enum.EasingDirection.InOut),{Size = UDim2.new(1,0,5.5,0)}):Play()
+					scrollingframe.Position = UDim2.new(0,0,1.5,0)
+					scrollingframe.CanvasSize = UDim2.new(0,0,1.5,0)
+					scrollingframe.ScrollBarThickness = 5
+					scrollingframe.BackgroundTransparency = 1
+					scrollingframe.TopImage = "rbxassetid://112365584"
+					scrollingframe.BottomImage = "rbxassetid://112365220"
+					scrollingframe.AutomaticCanvasSize = Enum.AutomaticSize.Y
+					scrollingframe.ScrollBarImageColor3 = Color3.fromRGB(255,255,255)
+					local uilist = Instance.new("UIListLayout",scrollingframe)
+					uilist.FillDirection = Enum.FillDirection.Vertical
+					uilist.SortOrder = Enum.SortOrder.LayoutOrder
+					for i,v in StringList do
+						local hbutton = Instance.new("TextButton",scrollingframe)
+						hbutton.Text = v
+						hbutton.TextScaled = true
+						hbutton.Font = Enum.Font.Cartoon
+						hbutton.FontFace.Weight = Enum.FontWeight.Bold
+						hbutton.Size = UDim2.new(1,0,0.349,0)
+						hbutton.AnchorPoint = Vector2.new(0.5,0.5)
+						hbutton.TextColor3 = Color3.fromRGB(255,255,255)
+						hbutton.Style = Enum.ButtonStyle.RobloxButton
+						hbutton:SetAttribute("CurrentSelected", hbutton.Text)
+						hbutton.MouseButton1Click:Connect(function()
+							scrollingframe:destroy()
+							activated = false
+							button:SetAttribute("CurrentSelected", hbutton.Text)
+							button.Text = hbutton:GetAttribute("CurrentSelected")
+							function_(hbutton.Text)
+						end)
+					end
+				else
+					if scrollingframe then
+						scrollingframe:Destroy()
+					end
+				end
+			end)
+			
+			return button
+		end
+		
+		function RBX3.CreateButton(text, function_)
+			local button = Instance.new("TextButton",frame)
+			button.Style = style_Button
+			button.Text = text
+			button.TextScaled = true
+			button.Font = Enum.Font.Cartoon
+			button.FontFace.Weight = Enum.FontWeight.Bold
+			button.Size = UDim2.new(0,200,0,50)
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.TextColor3 = Color3.fromRGB(255,255,255)
+			button:SetAttribute("CurrentSelected", false)
+			button.MouseButton1Click:Connect(function()
+				function_(button.Text)
+			end)
+			return button
+		end
+
+		return RBX3
+	end
+	
+	function RBX2.CreateEmptyFrame(Draggable)
+		local frame = Instance.new("Frame",screen)
+		frame.Position = UDim2.new(0.5,0,0.5,0)
+		frame.AnchorPoint = Vector2.new(0.5,0.5)
+		frame.BackgroundColor3 = Color3.fromRGB(163,162,165)
+		frame.BackgroundTransparency = 0.5
+		frame.BorderSizePixel = 0
+		frame.Size = UDim2.new(0.25,0,0.3,0)
+		frame.Style = frame_Style
+		if Draggable==true then
+			local inst = Instance.new("UIDragDetector",frame)
+		end
+		return frame
+	end
+	
+	function RBX2.SmallerMessage(text:string, DestroyTime:number)
+		local frame = Instance.new("TextLabel",screen)
+		frame.Position = UDim2.new(0,30,0,30)
+		frame.BackgroundColor3 = Color3.fromRGB(163,162,165)
+		frame.BackgroundTransparency = 0.5
+		frame.BorderSizePixel = 0
+		frame.Size = UDim2.new(0,350,0,250)
+		frame.Text = text
+		frame.Font = Enum.Font.Cartoon
+		frame.FontFace.Weight = Enum.FontWeight.Bold
+		frame.TextScaled = true
+		frame.TextColor3 = Color3.fromRGB(0,0,0)
+		
+		game.Debris:AddItem(frame, DestroyTime or 3)
+		return frame
+	end
+	
+	function RBX2.DownHint(Text:string, DestroyTime: number)
+		local textlabel = Instance.new("TextLabel",screen)
+		textlabel.AnchorPoint = Vector2.new(0.5,0.5)
+		textlabel.Size = UDim2.new(1,0,-0.005,20)
+		textlabel.Position = UDim2.new(0.5,0,0.99,0)
+		textlabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
+		textlabel.BorderSizePixel = 0
+		textlabel.TextScaled = true
+		textlabel.Font = Enum.Font.Cartoon
+		textlabel.TextColor3 = Color3.fromRGB(255,255,255)
+		textlabel.TextStrokeColor3 = Color3.fromRGB(0,0,0)
+		textlabel.TextStrokeTransparency = 4
+		textlabel.FontFace.Weight = Enum.FontWeight.Bold
+		textlabel.Text = Text or "( NO INFORMATION FOUND )"
+		
+		game.Debris:AddItem(textlabel, DestroyTime or 3)
+		
+		return textlabel
+	end
+	
+	return RBX2
+end
+
+return RBX

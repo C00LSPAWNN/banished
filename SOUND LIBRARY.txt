@@ -1,0 +1,46 @@
+local module = {}
+module.__index = module
+
+local sounds = {
+	["HalloweenLightning"] = "rbxassetid://12222019",
+	["HalloweenThunder"] = "rbxassetid://12222030",
+	["Kerplunk"] = "rbxassetid://12222054",
+	["Kid saying Ouch"] = "rbxassetid://12222058",
+	["Launching rocket"] = "rbxassetid://12222065",
+	["Rocket shot"] = "rbxassetid://12222084",
+	["Rocket whoosh 01"] = "rbxassetid://12222095",
+	["Rubberband sling shot"] = "rbxassetid://12222103",
+	["Rubberband"] = "rbxassetid://12222106",
+	["SWITCH3"] = "rbxassetid://12222183",
+	["Short spring sound"] = "rbxassetid://12222124",
+	["Shoulder fired rocket"] = "rbxassetid://12222132",
+	["Synth Parade"] = "rbxassetid://1836012899",
+	["bass"] = "rbxassetid://12221831",
+	["bfsl-minifigfoots1"] = "rbxassetid://12221952",
+	["bfsl-minifigfoots2"] = "rbxassetid://12221962",
+	["button"] = "rbxassetid://12221967",
+	["clickfast"] = "rbxassetid://12221976",
+	["collide"] = "rbxassetid://12221984",
+	["electronicpingshort"] = "rbxassetid://12221990",
+	["flashbulb"] = "rbxassetid://12221996",
+	["glassbreak"] = "rbxassetid://12222005",
+	["hit"] = "rbxassetid://12222046",
+	["pageturn"] = "rbxassetid://12222076",
+	["paintball"] = "rbxassetid://11900833",
+	["snap"] = "rbxassetid://12222140",
+	["splat"] = "rbxassetid://12222152",
+	["switch"] = "rbxassetid://12222170",
+	["swoosh"] = "rbxassetid://12222200",
+	["swordlunge"] = "rbxassetid://12222208",
+	["swordslash"] = "rbxassetid://12222216",
+	["ufofly"] = "rbxassetid://12221842",
+	["unsheath"] = "rbxassetid://12222225",
+	["uuhhh"] = "rbxassetid://12222242",
+	["victory"] = "rbxassetid://12222253"	
+}
+
+function module:GetSound(txt)
+	return sounds[txt]
+end
+
+return module

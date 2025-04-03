@@ -1,6 +1,10 @@
 local RBX = {}
 RBX.__index = RBX
 
+local Services = {
+	["UIS"] = game:GetService("UserInputService")
+}
+
 function RBX:CreateScreen()
 
 	local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
@@ -59,9 +63,40 @@ function RBX:CreateScreen()
 			if Button:GetAttribute("CurrentSelected") then
 				return Button:GetAttribute("CurrentSelected")
 			else
-				RBX2.SmallerMessage("No Information Found", 2.5)
+				RBX2.SmallerMessage("( NO INFORMATION FOUND )", 2.5)
 			end
 		end
+		local showad = false
+		function RBX3.CreateHideButton()
+			local button = Instance.new("TextButton",frame)
+			button.Style = Enum.ButtonStyle.RobloxButton
+			button.Name = "hide"
+			button.Text = "-"
+			button.TextScaled = true
+			button.Font = Enum.Font.Cartoon
+			button.FontFace.Weight = Enum.FontWeight.Bold
+			button.Size = UDim2.new(0.165,0,0.142,0)
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.Position = UDim2.new(0.85,0,0,0)
+			button.TextColor3 = Color3.fromRGB(255,255,255)
+			local con = nil
+			button.MouseButton1Click:Connect(function()
+				frame.Visible = false
+				if showad==false then
+					RBX2.SmallerMessage("Press F2 to open the menu again!!! ^_^",3)					
+				end
+				showad = true
+				con = Services.UIS.InputBegan:Connect(function(inp, gameprocess)
+					if gameprocess == false then
+						if inp.KeyCode == Enum.KeyCode.F2 then
+							frame.Visible = true
+							con:Disconnect()
+						end
+					end
+				end)
+			end)
+		end
+
 		
 		function RBX3.CreateCloseButton()
 			local button = Instance.new("TextButton",frame)
@@ -85,13 +120,14 @@ function RBX:CreateScreen()
 				Max = 10,
 				Min = 0,
 				Increment = 1,
+				Current = 0,
 			}
 			
-			local h = Settings.Min
+			local h = Settings.Current or Settings.Min
 			
 			local button = Instance.new("TextButton",frame)
 			button.Style = Enum.ButtonStyle.RobloxButton
-			button.Text = Settings.Min
+			button.Text = string.format("%.1f", h)
 			button.TextScaled = true
 			button.Font = Enum.Font.Cartoon
 			button.FontFace.Weight = Enum.FontWeight.Bold
@@ -101,6 +137,9 @@ function RBX:CreateScreen()
 			button:AddTag("SLIDER BUTTON")
 			button.Active = true
 			button.Interactable = true
+
+			function_(Settings.Current)
+			
 			button:SetAttribute("CurrentSelected",h)
 			local button_increase = Instance.new("TextButton",button)
 			button_increase.Name = "INCREASE"
@@ -152,6 +191,42 @@ function RBX:CreateScreen()
 			button_decrease.AnchorPoint = Vector2.new(0.5,0.5)
 			button_decrease.Position = UDim2.new(-0.5,0,0.5,0)
 			button_decrease.TextColor3 = Color3.fromRGB(255,255,255)
+			
+			if h>Settings.Min then
+				button_decrease.Interactable = true
+				button_decrease.Active = true
+			end
+			
+			if h>=Settings.Max or h==Settings.Max then
+				button_increase.Interactable = false
+				button_increase.Active = false
+			end
+			
+			button.MouseButton1Click:Connect(function()
+				if button.Text ~= string.format("%.1f", Settings.Min) then
+					button.Text = string.format("%.1f", Settings.Min)
+				elseif button.Text == string.format("%.1f",Settings.Min) then
+					button.Text = string.format("%.1f", Settings.Max)
+				end
+
+				button:SetAttribute("CurrentSelected",button.Text)
+				h = tonumber(button.Text)
+				if button.Text==string.format("%.1f",Settings.Min) then
+					button_decrease.Active = false
+					button_decrease.Interactable = false
+					
+					button_increase.Interactable = true
+					button_increase.Active = true
+				elseif button.Text==string.format("%.1f",Settings.Max) then
+					button_increase.Interactable = false
+					button_increase.Active = false
+					
+					button_decrease.Active = true
+					button_decrease.Interactable = true
+				end
+				function_(tonumber(button.Text))
+			end)
+			
 			button_decrease.MouseButton1Click:Connect(function()
 				local oldvalue = h
 				local value = oldvalue-Settings.Increment
@@ -184,13 +259,92 @@ function RBX:CreateScreen()
 			return button
 		end
 		
+		function RBX3.CreateKeyBindButton(text, StartKeybind:string, function_)
+			local test = false
+			local button = Instance.new("TextButton",frame)
+			button.Style = Enum.ButtonStyle.RobloxButton
+			button.TextScaled = true
+			button.Font = Enum.Font.Cartoon
+			button.Text = text or "no text <_<"
+			button.FontFace.Weight = Enum.FontWeight.Bold
+			button.Size = UDim2.new(0.495,0,0.145,0)
+			button.AnchorPoint = Vector2.new(0.5,0.5)
+			button.TextColor3 = Color3.fromRGB(255,255,255)
+
+			button:SetAttribute("CurrentSelected", false)
+
+			local buttontwo = Instance.new("TextButton",button)
+			buttontwo.Style = style_Button
+			buttontwo.TextScaled = true
+			buttontwo.Font = Enum.Font.Cartoon
+			buttontwo.Text = "No keybind selected"
+			if StartKeybind then
+				buttontwo.Text = StartKeybind
+			end
+			buttontwo.FontFace.Weight = Enum.FontWeight.Bold
+			buttontwo.AnchorPoint = Vector2.new(0.5,0.5)
+			buttontwo.TextColor3 = Color3.fromRGB(255,255,255)
+			buttontwo.Size = UDim2.new(0.45,0,1.5,10)
+			buttontwo.AnchorPoint = Vector2.new(0.5,0.5)
+			buttontwo.Position = UDim2.new(1.3,0,0.5,0)
+			local b = 0
+			local connection_ = nil
+			buttontwo.MouseButton1Click:Connect(function()
+				buttontwo.Text = "Selectin' Keybind"
+				if connection_ then
+					connection_:Disconnect()
+				end
+				connection_ = Services.UIS.InputBegan:Connect(function(Input, GameProcess)
+					if GameProcess==true then return end
+					
+					
+					if Input.UserInputType.Name=="Keyboard" then
+						buttontwo.Text = Input.KeyCode.Name
+					elseif Input.UserInputType.Name=="MouseButton1" then
+						buttontwo.Text = "R1"
+					elseif Input.UserInputType.Name=="MouseButton2" then
+						buttontwo.Text = "L2"
+					end
+					button:SetAttribute("CurrentSelected", buttontwo.Text)
+					connection_:Disconnect()
+					
+				end)
+			end)
+
+			Services.UIS.InputBegan:Connect(function(Input, GameProcess)
+				if GameProcess==true then return end
+				
+				if Input.UserInputType.Name=="Keyboard" then
+					if Input.KeyCode.Name==buttontwo.Text then
+						function_(true)
+					end
+				elseif Input.UserInputType.Name=="MouseButton1" then
+					if Input.UserInputType.Name=="MouseButton1" and buttontwo.Text=="R1" then
+						function_(true)
+					end
+				elseif Input.UserInputType.Name=="MouseButton2" then
+					if Input.UserInputType.Name=="MouseButton2" and buttontwo.Text=="L2" then
+						function_(true)
+					end
+				end
+			end)
+
+			task.delay(0.1,function()
+				local matheh = button.Position.X.Scale-0.05
+				button.Position = UDim2.new(matheh,0,button.Position.Y.Scale,0)
+			end)
+
+			return button
+
+		end
+		
 		function RBX3.CreateBoolButton(text, turned, function_)
 			local test = turned or false
 			local button = Instance.new("TextButton",frame)
 			button.Style = Enum.ButtonStyle.RobloxButton
 			button.TextScaled = true
 			button.Font = Enum.Font.Cartoon
-			button.Text = text
+			button.Text = text or "no text <_<"
 			button.FontFace.Weight = Enum.FontWeight.Bold
 			button.Size = UDim2.new(0.495,0,0.145,0)
 			button.AnchorPoint = Vector2.new(0.5,0.5)
@@ -250,7 +404,7 @@ function RBX:CreateScreen()
 			textbox.Font = Enum.Font.Cartoon
 			textbox.FontFace.Weight = Enum.FontWeight.Bold
 			textbox.TextColor3 = Color3.fromRGB(255,255,255)
-			textbox.Text = text
+			textbox.Text = text or "no text <_<"
 			textbox.Size = UDim2.new(1,0,1,0)
 			textbox.AnchorPoint = Vector2.new(0.5,0.5)
 			textbox.Position = UDim2.new(0.5,0,0.5,0)
@@ -267,7 +421,7 @@ function RBX:CreateScreen()
 		function RBX3.CreateDropDownButton(text, StringList, selected, function_)
 			local button = Instance.new("TextButton",frame)
 			button.Style = style_Button
-			button.Text = text or StringList[1]
+			button.Text = text or StringList[1] or "no text <_<"
 			button.TextScaled = true
 			button.Font = Enum.Font.Cartoon
 			button.FontFace.Weight = Enum.FontWeight.Bold
@@ -281,11 +435,12 @@ function RBX:CreateScreen()
 			button.MouseButton1Click:Connect(function()
 				activated = not activated
 				if activated==true then
+					button.ZIndex = 9999999
 					scrollingframe = Instance.new("ScrollingFrame",button)
 					scrollingframe.Size = UDim2.new(1,0,0,0)
 					game.TweenService:Create(scrollingframe,TweenInfo.new(0.1,Enum.EasingStyle.Quad,Enum.EasingDirection.InOut),{Size = UDim2.new(1,0,5.5,0)}):Play()
 					scrollingframe.Position = UDim2.new(0,0,1.5,0)
-					scrollingframe.CanvasSize = UDim2.new(0,0,1.5,0)
+					scrollingframe.CanvasSize = UDim2.new(0,0,0,0)
 					scrollingframe.ScrollBarThickness = 5
 					scrollingframe.BackgroundTransparency = 1
 					scrollingframe.TopImage = "rbxassetid://112365584"
@@ -307,6 +462,7 @@ function RBX:CreateScreen()
 						hbutton.Style = Enum.ButtonStyle.RobloxButton
 						hbutton:SetAttribute("CurrentSelected", hbutton.Text)
 						hbutton.MouseButton1Click:Connect(function()
+							button.ZIndex = 1
 							scrollingframe:destroy()
 							activated = false
 							button:SetAttribute("CurrentSelected", hbutton.Text)
@@ -316,6 +472,7 @@ function RBX:CreateScreen()
 					end
 				else
 					if scrollingframe then
+						button.ZIndex = 1
 						scrollingframe:Destroy()
 					end
 				end
@@ -327,7 +484,7 @@ function RBX:CreateScreen()
 		function RBX3.CreateButton(text, function_)
 			local button = Instance.new("TextButton",frame)
 			button.Style = style_Button
-			button.Text = text
+			button.Text = text or "no text <_<"
 			button.TextScaled = true
 			button.Font = Enum.Font.Cartoon
 			button.FontFace.Weight = Enum.FontWeight.Bold
@@ -366,7 +523,7 @@ function RBX:CreateScreen()
 		frame.BackgroundTransparency = 0.5
 		frame.BorderSizePixel = 0
 		frame.Size = UDim2.new(0,350,0,250)
-		frame.Text = text
+		frame.Text = text or "( NO INFORMATION FOUND )"
 		frame.Font = Enum.Font.Cartoon
 		frame.FontFace.Weight = Enum.FontWeight.Bold
 		frame.TextScaled = true

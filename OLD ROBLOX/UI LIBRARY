@@ -6,10 +6,27 @@ local Services = {
 }
 
 function RBX:CreateScreen()
-
+	
+	local key = "F2"
+	local customHide = "Press : to open the menu again!!! ^_^"
 	local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 	local screen = Instance.new("ScreenGui", playerGui)
 	screen.Name = "RBXHUD"
+	
+	local tooltiphint = Instance.new("TextButton",screen)
+	tooltiphint.Style = Enum.ButtonStyle.RobloxButtonDefault
+	tooltiphint.Font = Enum.Font.Cartoon
+	tooltiphint.FontFace.Weight = Enum.FontWeight.Bold
+	tooltiphint.Text = "TEST"
+	tooltiphint.TextColor3 = Color3.fromRGB(255,255,255)
+	tooltiphint.Size = UDim2.new(0.25,0,0.1,0)
+	tooltiphint.TextScaled = true
+	tooltiphint.Visible = false
+	game["Run Service"].RenderStepped:Connect(function()
+		local mouse = game.Players.LocalPlayer:GetMouse()
+		tooltiphint.Position = UDim2.new(0,mouse.X-(tooltiphint.AbsoluteSize.X/2),0,mouse.Y-(tooltiphint.AbsoluteSize.Y+5))
+	end)
+	
 	
 	if game.UserInputService.TouchEnabled==true then
 		local frame = Instance.new("TextLabel",screen)
@@ -83,12 +100,12 @@ function RBX:CreateScreen()
 			button.MouseButton1Click:Connect(function()
 				frame.Visible = false
 				if showad==false then
-					RBX2.SmallerMessage("Press F2 to open the menu again!!! ^_^",3)					
+					RBX2.SmallerMessage(customHide:gsub(":",key),3)					
 				end
 				showad = true
 				con = Services.UIS.InputBegan:Connect(function(inp, gameprocess)
 					if gameprocess == false then
-						if inp.KeyCode == Enum.KeyCode.F2 then
+						if inp.KeyCode == Enum.KeyCode[key] then
 							frame.Visible = true
 							con:Disconnect()
 						end
@@ -531,6 +548,36 @@ function RBX:CreateScreen()
 		
 		game.Debris:AddItem(frame, DestroyTime or 3)
 		return frame
+	end
+	
+	local function showTooltip(text)
+		tooltiphint.Visible = true
+		tooltiphint.Text = text
+		tooltiphint.ZIndex = 999999
+	end
+	
+	local function hideTooltip()
+		tooltiphint.Visible = false
+		tooltiphint.Text = ""
+	end
+	
+	--[[ ADD LETTER ":" SO IT CAN SHOW WHICH KEYBIND TO PRESS
+		EXAMPLE: "Hey! Press : To open menu again!"
+		
+		RBX2:ChangeHideText("Press : to open menu", "B")
+	]]--
+	function RBX2:ChangeHideText(text,keybind)
+		key = keybind
+		customHide = text
+	end
+
+	function RBX2:Tooltip(frame:Frame, description: string)
+		frame.MouseEnter:Connect(function()
+			showTooltip(description)
+		end)
+		frame.MouseLeave:Connect(function()
+			hideTooltip()
+		end)
 	end
 	
 	function RBX2.DownHint(Text:string, DestroyTime: number)

@@ -9,7 +9,7 @@ function RBX:CreateScreen()
 	
 	local key = "F2"
 	local customHide = "Press : to open the menu again!!! ^_^"
-	local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+	local playerGui = game.CoreGui or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 	local screen = Instance.new("ScreenGui", playerGui)
 	screen.Name = "RBXHUD"
 	

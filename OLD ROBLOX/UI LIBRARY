@@ -1,4 +1,4 @@
-local RBX = {}
+RBX = {}
 RBX.__index = RBX
 
 local Services = {

@@ -9,7 +9,18 @@ function RBX:CreateScreen()
 	
 	local key = "F2"
 	local customHide = "Press : to open the menu again!!! ^_^"
-	local playerGui = game.CoreGui or game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+	local playerGui = nil
+	local h, a =  pcall(function()
+		playerGui = game.CoreGui
+		local screen = Instance.new("ScreenGui", playerGui)
+		screen.Name = "RBXHUD"
+		screen:Destroy()
+	end)
+	
+	if h==false then
+		playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	end
+
 	local screen = Instance.new("ScreenGui", playerGui)
 	screen.Name = "RBXHUD"
 	
@@ -327,8 +338,9 @@ function RBX:CreateScreen()
 					
 				end)
 			end)
-
-			Services.UIS.InputBegan:Connect(function(Input, GameProcess)
+			local con = nil
+			con = Services.UIS.InputBegan:Connect(function(Input, GameProcess)
+				if buttontwo.Parent == nil then con:Disconnect() return end
 				if GameProcess==true then return end
 				
 				if Input.UserInputType.Name=="Keyboard" then

@@ -155,7 +155,7 @@ function RBX:CreateScreen()
 			button.Active = true
 			button.Interactable = true
 
-			function_(Settings.Current)
+			function_(h)
 			
 			button:SetAttribute("CurrentSelected",h)
 			local button_increase = Instance.new("TextButton",button)

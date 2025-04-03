@@ -141,6 +141,7 @@ function RBX:CreateScreen()
 			button.MouseButton1Click:Connect(function()
 				frame:Destroy()
 			end)
+			return button
 		end
 		
 		function RBX3.CreateSlider(Settings,function_)

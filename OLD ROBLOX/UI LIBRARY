@@ -422,7 +422,8 @@ function RBX:CreateScreen()
 	
 		end
 		
-		function RBX3.TextboxButton(text, function_)
+		
+		function RBX3.TextboxButton(multiline,text, function_)
 			local button = Instance.new("TextButton",frame)
 			button.Style = Enum.ButtonStyle.RobloxButton
 			button.TextScaled = true
@@ -440,13 +441,14 @@ function RBX:CreateScreen()
 			textbox.Position = UDim2.new(0.5,0,0.5,0)
 			textbox.BackgroundTransparency = 1
 			textbox.ClearTextOnFocus = false
-			textbox.MultiLine = true
+			textbox.MultiLine = multiline or false
 			textbox:GetPropertyChangedSignal("Text"):Connect(function()
 				function_(textbox.Text)
 			end)
 			
 			return button
 		end
+		
 		
 		function RBX3.CreateDropDownButton(text, StringList, selected, function_)
 			local button = Instance.new("TextButton",frame)

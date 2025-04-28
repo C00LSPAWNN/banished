@@ -166,7 +166,9 @@ function RBX:CreateScreen()
 			button:AddTag("SLIDER BUTTON")
 			button.Active = true
 			button.Interactable = true
-
+			local increment = Instance.new("NumberValue",button)
+			increment.Name = "inc"
+			increment.Value=Settings.Increment or 1
 			function_(h)
 			
 			button:SetAttribute("CurrentSelected",h)
@@ -184,7 +186,7 @@ function RBX:CreateScreen()
 			local button_decrease = nil
 			button_increase.MouseButton1Click:Connect(function()
 				local oldvalue = h
-				local value = oldvalue+Settings.Increment
+				local value = oldvalue+button.inc.Value
 				
 				if value>Settings.Min then
 					button_decrease.Interactable = true
@@ -258,7 +260,7 @@ function RBX:CreateScreen()
 			
 			button_decrease.MouseButton1Click:Connect(function()
 				local oldvalue = h
-				local value = oldvalue-Settings.Increment
+				local value = oldvalue-button.inc.Value
 				if value<Settings.Max then
 					button_increase.Interactable = true
 					button_increase.Active = true
@@ -286,7 +288,7 @@ function RBX:CreateScreen()
 			end)
 			
 			return button
-		end
+		end	
 		
 		function RBX3.CreateKeyBindButton(text, StartKeybind:string, function_)
 			local test = false
@@ -422,7 +424,6 @@ function RBX:CreateScreen()
 	
 		end
 		
-		
 		function RBX3.TextboxButton(multiline,text, function_)
 			local button = Instance.new("TextButton",frame)
 			button.Style = Enum.ButtonStyle.RobloxButton
@@ -448,7 +449,6 @@ function RBX:CreateScreen()
 			
 			return button
 		end
-		
 		
 		function RBX3.CreateDropDownButton(text, StringList, selected, function_)
 			local button = Instance.new("TextButton",frame)
